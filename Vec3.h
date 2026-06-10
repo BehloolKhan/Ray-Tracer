@@ -13,6 +13,14 @@ struct Vec3 {
 		this->y = y_;
 		this->z = z_;
 	}
+
+	//default constructor
+	//
+	Vec3() {
+		x = 0;
+		y = 0;
+		z = 0;
+	}
 };
 
 #endif 
