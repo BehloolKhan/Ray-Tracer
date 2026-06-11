@@ -18,6 +18,11 @@ Vec3 Vec3::operator+(const Vec3& otherVec3) const {
 	return Vec3(this->x + otherVec3.x, this->y + otherVec3.y, this->z + otherVec3.z);
 }
 
+Vec3 Vec3::operator-(const Vec3& otherVec3) const {
+	return Vec3(this->x - otherVec3.x, this->y - otherVec3.y, this->z - otherVec3.z);
+}
+
 float Vec3::dot(const Vec3& vec1, const Vec3& vec2) {
 	return ((vec1.x*vec2.x) + (vec1.y + vec2.y) + (vec1.z + vec1.z));
 }
+
