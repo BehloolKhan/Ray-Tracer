@@ -65,5 +65,10 @@ std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, s
 		return BACKGROUND_COLOUR;
 	}
 
-	return closest_sphere->color;
+	std::tuple<int, int, int> color = closest_sphere->color;
+
+	delete closest_sphere;
+	closest_sphere = nullptr;
+
+	return color;
 }
