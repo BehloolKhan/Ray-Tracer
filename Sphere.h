@@ -6,10 +6,10 @@
 
 struct Sphere {
 	Vec3 center;
-	int radius;
+	float radius;
 	std::tuple<int, int, int> color; 
 
-	Sphere(Vec3 center_, int radius_, std::tuple<int, int, int> color_) {
+	Sphere(Vec3 center_, float radius_, std::tuple<int, int, int> color_) {
 		this->center = center_;
 		this->radius = radius_;
 		this->color = color_;
