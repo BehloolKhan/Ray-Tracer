@@ -3,11 +3,15 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-int CANVAS_WIDTH = 500;
-int CANVAS_HEIGHT = 500;
+#include "Vec3.h"
 
-int VIEWPORT_HEIGHT = 1;
-int VIEWPORT_WIDTH = 1;
+float CANVAS_WIDTH = 500;
+float CANVAS_HEIGHT = 500;
+
+float VIEWPORT_HEIGHT = 1;
+float VIEWPORT_WIDTH = 1;
 
 int PROJECTTION_PLANE_D = 1;
+Vec3 origin = Vec3(0, 0, 0);
+
 #endif
