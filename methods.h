@@ -21,4 +21,8 @@ std::tuple<int, int, int>TraceRay(Vec3& O_, Vec3& D, float t_min, float t_max, s
 //method sets up the scene, i.e sets up the spheres and their correponding colors and co-ordinates
 //
 std::vector<Sphere> setUpScene();
+
+//method to return the correponding point on the view port for a given canvas
+//
+Vec3 canvasToViewPort(int x, int y);
 #endif
