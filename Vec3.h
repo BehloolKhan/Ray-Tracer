@@ -1,7 +1,6 @@
 #ifndef VEC3_H
 #define VEC3_H
 
-
 struct Vec3 {
 
 	float x;
@@ -21,19 +20,7 @@ struct Vec3 {
 	//returns the dot product of two vectors
 	static float dot(const Vec3& vec1, const Vec3& vec2);
 
-	Vec3(float x_, float y_, float z_) {
-		this->x = x_;
-		this->y = y_;
-		this->z = z_;
-	}
 
-	//default constructor
-	//
-	Vec3() {
-		x = 0;
-		y = 0;
-		z = 0;
-	}
 };
 
 #endif 
