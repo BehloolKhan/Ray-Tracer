@@ -8,6 +8,7 @@
 #include <limits>
 #include <cmath>
 #include "Vector"
+#include <iostream>
 
 //method that returns the corresponding co-ordinate on the view port for a
 //given point on the canvas
@@ -71,4 +72,39 @@ std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, s
 	closest_sphere = nullptr;
 
 	return color;
+}
+
+std::vector<Sphere> setupScene() {
+	std::vector<Sphere> spheres;
+	int numberSpheres;
+	std::cout << "What is the number of spheres?: ";
+	std::cin >> numberSpheres;
+
+	for (int i = 1; i <= numberSpheres; ++i) {
+		//grabbing co-ordinates
+		//
+		int x, y, z;
+		std::cout << "Enter the x, y and z co-ordinates and use space to seperate them: ";
+
+		std::cin >> x;
+		std::cin >> y;
+		std::cin >> z;
+
+		//getting radius
+		//
+		float radius;
+		std::cout << "Enter the radius of sphere " << i << ": ";
+		std::cin >> radius;
+
+		//getting the color values
+		int R, G, B;
+		std::cout << "Enter the format of the color in the form of R G B where each val between 0-255: ";
+		std::cin >> R;
+		std::cin >> G;
+		std::cin >> B;
+
+		spheres.push_back(Sphere(Vec3(x, y, z), radius, std::tuple<int, int, int>(R, G, B)));
+	}
+
+	return spheres;
 }
