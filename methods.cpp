@@ -14,7 +14,7 @@
 //given point on the canvas
 //
 Vec3 canvasToViewPort(int x, int y) {
-	int d = PROJECTTION_PLANE_D;
+	float d = (float) PROJECTTION_PLANE_D;
 	return Vec3(x*(VIEWPORT_WIDTH/CANVAS_WIDTH), y*(VIEWPORT_HEIGHT/CANVAS_HEIGHT), d);
 }
 
@@ -83,7 +83,7 @@ std::vector<Sphere> setupScene() {
 	for (int i = 1; i <= numberSpheres; ++i) {
 		//grabbing co-ordinates
 		//
-		int x, y, z;
+		float x, y, z;
 		std::cout << "Enter the x, y and z co-ordinates and use space to seperate them: ";
 
 		std::cin >> x;
