@@ -6,6 +6,7 @@
 #include <tuple>
 #include <limits>
 #include <vector>
+#include "Canvas.h"
 
 int main() {
 	std::cout << "Hello World";
@@ -13,6 +14,7 @@ int main() {
 	//setting up the scene
 	//
 	std::vector<Sphere> Spheres = setUpScene();
+	Canvas canvas{}; //use curly brace to initialise Canvas object;
 
 	for (int x = -CANVAS_WIDTH / 2; x <= CANVAS_WIDTH / 2; ++x) {
 		for (int y = -CANVAS_HEIGHT / 2; y <= CANVAS_HEIGHT / 2; ++y) {
@@ -20,6 +22,9 @@ int main() {
 			Vec3 D = V - origin;
 			float posInf = std::numeric_limits<float>::infinity();
 			std::tuple<int, int, int> color = TraceRay(origin, D, 1.0, posInf, Spheres);
+			canvas.putPixel(x, y, color);
 		}
 	}
+
+	canvas.writeToFile();
 }
