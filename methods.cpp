@@ -64,22 +64,15 @@ std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, s
 
 		}
 
-		std::cout << "if-conditions for ts finished:";
 	}
 
 	if (closest_sphere == nullptr) {
 		return BACKGROUND_COLOUR;
 	}
 
-	std::cout << "intersection happened\n";
-
 	std::tuple<int, int, int> color = closest_sphere->color;
 
-	std::cout << "color being accessed";
-
 	closest_sphere = nullptr;
-
-	std::cout << "color is returned";
 
 	return color;
 }
