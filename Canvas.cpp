@@ -4,23 +4,26 @@
 #include "Constants.h"
 
 Canvas::Canvas() {
-	imageFile = std::ofstream("imageFile.ppm");
-	//writing the dimensions and format
-	imageFile << "P3" << '\n' << (int) CANVAS_HEIGHT << " " << (int) CANVAS_WIDTH << '\n' << 255 << '\n';
-}
+
+};
 
 void Canvas::putPixel(int x, int y, std::tuple<int, int, int>& color) {
 	//needt to convert x,y -> standard original x, y co-ordinates:
 	//
 	int S_X = ((int)CANVAS_WIDTH) / 2 + x;
-	int S_Y = ((int)CANVAS_HEIGHT) / 2 - y;
+	int S_Y = (((int)CANVAS_HEIGHT) / 2) -1 - y;
 	//Now I need to flatten the two-dimensional co-ordinates two a one dimesnional index
 	//
-	int index = (S_Y * ((int)CANVAS_WIDTH)) + x;
+	int index = (S_Y * ((int)CANVAS_WIDTH)) + S_X;
 	colors[index] = color;
 }
 
 void Canvas::writeToFile() {
+
+	imageFile = std::ofstream("imageFile.ppm");
+	//writing the dimensions and format
+	imageFile << "P3" << '\n' << (int)CANVAS_WIDTH << " " << (int)CANVAS_WIDTH << '\n' << 255 << '\n';
+
 	//getting all the colors and write it to the file
 	//
 	int total = ((int)CANVAS_WIDTH) * ((int)CANVAS_HEIGHT);
