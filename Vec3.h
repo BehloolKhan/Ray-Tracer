@@ -20,6 +20,9 @@ struct Vec3 {
 	//returns the dot product of two vectors
 	static float dot(const Vec3& vec1, const Vec3& vec2);
 
+	//method prints all the values for a given
+	void printAll();
+
 
 };
 
