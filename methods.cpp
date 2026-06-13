@@ -7,7 +7,7 @@
 #include "Sphere.h"
 #include <limits>
 #include <cmath>
-#include "Vector"
+#include <vector>
 #include <iostream>
 
 //method that returns the corresponding co-ordinate on the view port for a
@@ -25,6 +25,7 @@ std::tuple<float, float> IntersectRaySphere(Vec3& O, Vec3& D, Sphere sphere) {
 	float a = Vec3::dot(D, D);
 	float b = 2 * Vec3::dot(CO, D);
 	float c = Vec3::dot(CO, CO) - (r * r);
+
 
 	float discriminant = b * b - (4 * a * c);
 
@@ -44,10 +45,12 @@ std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, s
 	float closest_t = std::numeric_limits<float>::infinity();
 	Sphere* closest_sphere = nullptr;
 
-	for (Sphere currentSphere : Spheres) {
+	for (Sphere& currentSphere : Spheres) {
+
 		std::tuple<float, float> t_values = IntersectRaySphere(O, D, currentSphere);
 		float t1 = std::get<0>(t_values);
 		float t2 = std::get<1>(t_values);
+
 
 		if (((t1 >= t_min) && (t1 < t_max)) && t1 < closest_t) {
 			closest_t = t1;
@@ -60,21 +63,28 @@ std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, s
 			closest_sphere = &currentSphere;
 
 		}
+
+		std::cout << "if-conditions for ts finished:";
 	}
 
 	if (closest_sphere == nullptr) {
 		return BACKGROUND_COLOUR;
 	}
 
+	std::cout << "intersection happened\n";
+
 	std::tuple<int, int, int> color = closest_sphere->color;
 
-	delete closest_sphere;
+	std::cout << "color being accessed";
+
 	closest_sphere = nullptr;
+
+	std::cout << "color is returned";
 
 	return color;
 }
 
-std::vector<Sphere> setupScene() {
+std::vector<Sphere> setUpScene() {
 	std::vector<Sphere> spheres;
 	int numberSpheres;
 	std::cout << "What is the number of spheres?: ";
