@@ -13,7 +13,7 @@
 3. Visual Studio will automatically detect your `CMakeLists.txt` file and configure the build environment in the background.
 4. Wait for configuration to finish, select `RayTracer.exe` from the **Select Startup Item** dropdown at the top, and press the green hollow run button to compile and run
 
-### locating the output image file
+## locating the output image file
 - This ray-tracer will produce a ppm file called `imageFile.ppm`
 - The location of the file is in the same folder as the `RayTracer.exe` file
 - If you are using Visual studio community, Go to: `Ray-Tracer>out>build>x64-Debug`
