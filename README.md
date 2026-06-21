@@ -17,3 +17,8 @@
 - This ray-tracer will produce a ppm file called `imageFile.ppm`
 - The location of the file is in the same folder as the `RayTracer.exe` file
 - If you are using Visual studio community, Go to: `Ray-Tracer>out>build>x64-Debug`
+
+## editing the canvas file
+- you can change the dimesnions of the output ppm file by modifiying the canvas width and canvas height
+- locate the `Constants.h` header file
+- modify the values `CANVAS_WIDTH` and `CANVAS_HEIGHT` on line 9 and 10 respectively
