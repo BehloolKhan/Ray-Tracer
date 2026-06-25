@@ -9,6 +9,9 @@
 #include <cmath>
 #include <vector>
 #include <iostream>
+#include "Scene.h"
+#include "methods.h"
+#include "testFile.h"
 
 //method that returns the corresponding co-ordinate on the view port for a
 //given point on the canvas
@@ -41,11 +44,11 @@ std::tuple<float, float> IntersectRaySphere(Vec3& O, Vec3& D, Sphere sphere) {
 
 }
 
-std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, std::vector<Sphere>& Spheres) {
+std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, Scene& scene) {
 	float closest_t = std::numeric_limits<float>::infinity();
 	Sphere* closest_sphere = nullptr;
 
-	for (Sphere& currentSphere : Spheres) {
+	for (Sphere& currentSphere : scene.getSpheres()) {
 
 		std::tuple<float, float> t_values = IntersectRaySphere(O, D, currentSphere);
 		float t1 = std::get<0>(t_values);
@@ -70,8 +73,21 @@ std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, s
 		return BACKGROUND_COLOUR;
 	}
 
-	std::tuple<int, int, int> color = closest_sphere->color;
+	//Now lets compute the intensity at the point of intersection
+	//
 
+	Vec3 P = O + Vec3::multiplier(D, closest_t);
+	Vec3 N = P - closest_sphere->center;
+	Vec3 N_normal = Vec3::divides(N, N.length());
+
+	float intensity = computeLighting(P, N_normal, scene);
+	std::tuple<int, int, int> color = closest_sphere->color;
+	std::cout << "The color before multiplying: " << '\n';
+	testFile(color);
+	std::cout << "The intensity: " << intensity << '\n';
+	multiplyColorVector(color, intensity);
+	std::cout << "The color after multiplying: " << '\n';
+	testFile(color);
 	closest_sphere = nullptr;
 
 	return color;
@@ -110,4 +126,56 @@ std::vector<Sphere> setUpScene() {
 	}
 
 	return spheres;
+}
+
+float computeLighting(Vec3& P, Vec3& N, Scene& scene) {
+	float i = 0.0;
+	std::cout << "Print P: " << '\n';
+	P.printAll();
+	std::cout << "Print N: " << '\n';
+	N.printAll();
+	for (Light* light: scene.getLights()){
+		if (light->getType() == "ambient") {
+			i += light->getIntensity();
+			std::cout << "Value of i after ambient light is added: " << i << '\n';
+		}
+		else {
+			Vec3 L;
+			if (light->getType() == "point") {
+				L = light->getPosition() - P;
+				std::cout << "Print L: " << '\n';
+				L.printAll();
+			}
+
+			else if (light->getType() == "directional") {
+				L = light->getDirection();
+				std::cout << "Print L: " << '\n';
+				L.printAll();
+			}
+
+			float n_dot_L = Vec3::dot(N, L);
+			if (n_dot_L >= 0.0) {
+				i += (light->getIntensity() * n_dot_L / (N.length() * L.length()));
+				std::cout << "Value of i after point/directional light is added: " << i << '\n';
+			}
+		}
+	}
+
+	//now we need to cap i
+
+	if (i > 1.0) {
+		return 1.0;
+	}
+
+	else if (i < 0.0) {
+		return 0.0;
+	}
+
+	return i;
+}
+
+void multiplyColorVector(std::tuple<int, int, int>& color, float factor) {
+	std::get<0>(color) = (int)(std::get<0>(color) * factor);
+	std::get<1>(color) = (int)(std::get<1>(color) * factor);
+	std::get<2>(color) = (int)(std::get<2>(color) * factor);
 }
