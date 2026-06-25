@@ -7,21 +7,25 @@
 #include <limits>
 #include <vector>
 #include "Canvas.h"
+#include "Scene.h"
 
 int main() {
-	std::cout << "Hello World";
+	std::cout << "Hello World" << '\n';
 
 	//setting up the scene
 	//
-	std::vector<Sphere> Spheres = setUpScene();
+	Scene scene{};
 	Canvas canvas{}; //use curly brace to initialise Canvas object;
+
+	scene.setUpScene(); //get the information we need;
+	std::cout << "Canvas and scene object has been set up: " << '\n';
 
 	for (int x = -CANVAS_WIDTH / 2; x < CANVAS_WIDTH / 2; ++x) {
 		for (int y = -CANVAS_HEIGHT / 2; y < CANVAS_HEIGHT / 2; ++y) {
 			Vec3 V = canvasToViewPort(x, y);
 			Vec3 D = V - origin;
 			float posInf = std::numeric_limits<float>::infinity();
-			std::tuple<int, int, int> color = TraceRay(origin, D, 1.0, posInf, Spheres);
+			std::tuple<int, int, int> color = TraceRay(origin, D, 1.0, posInf, scene);
 			canvas.putPixel(x, y, color);
 		}
 	}
