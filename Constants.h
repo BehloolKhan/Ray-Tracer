@@ -6,8 +6,8 @@
 #include "Vec3.h"
 #include <tuple>
 
-inline constexpr float CANVAS_WIDTH = 100;
-inline constexpr float CANVAS_HEIGHT = 100;
+inline constexpr float CANVAS_WIDTH = 200;
+inline constexpr float CANVAS_HEIGHT = 200;
 
 inline constexpr float VIEWPORT_HEIGHT = 1;
 inline constexpr float VIEWPORT_WIDTH = 1;
