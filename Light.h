@@ -3,15 +3,22 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 #include <string>
+#include "Vec3.h"
 
-struct Light {
+class Light {
 protected:
 	std::string type;
 	float intensity;
+	void setIntensity(float intensity_);
 
 public:
+
 	Light(std::string type_, float intensity_);
-	std::string getType();
-	float getIntensity();
+	std::string getType() const ;
+	float getIntensity() const;
+	virtual ~Light() = default;
+
+	virtual Vec3 getPosition();
+	virtual Vec3 getDirection();
 };
 #endif
