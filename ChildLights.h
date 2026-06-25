@@ -7,23 +7,23 @@
 #include "Light.h"
 #include "Vec3.h"
 
-struct PointLight: public Light {
+class PointLight: public Light {
 
 private:
 	Vec3 position;
 
 public:
-	PointLight(std::string type_, float intensity_, Vec3 position_);
+	PointLight(std::string type_, float intensity_, Vec3& position_);
 	Vec3 getPosition();
 };
 
-struct DirectionalLight : public Light {
+class DirectionalLight : public Light {
 
 private:
 	Vec3 direction;
 
 public:
-	DirectionalLight(std::string type_, float intensity_, Vec3 direction_);
+	DirectionalLight(std::string type_, float intensity_, Vec3& direction_);
 	Vec3 getDirection();
 };
 #endif

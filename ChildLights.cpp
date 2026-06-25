@@ -2,7 +2,7 @@
 #include "Light.h"
 #include "Vec3.h"
 
-PointLight::PointLight(std::string type_, float intensity_, Vec3 position_) : Light(type_, intensity_) {
+PointLight::PointLight(std::string type_, float intensity_, Vec3& position_) : Light(type_, intensity_) {
 	this->position = position_;
 }
 
@@ -10,7 +10,7 @@ Vec3 PointLight::getPosition() {
 	return this->position;
 }
 
-DirectionalLight::DirectionalLight(std::string type_, float intensity_, Vec3 direction_) : Light(type_, intensity_) {
+DirectionalLight::DirectionalLight(std::string type_, float intensity_, Vec3& direction_) : Light(type_, intensity_) {
 	this->direction = direction_;
 }
 
