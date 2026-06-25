@@ -76,9 +76,23 @@ void Scene::setUpLights() {
 			Lights.push_back(new DirectionalLight(type, intensity, Vec3(x, y, z)));
 		}
 	}
+
+	float intensity;
+	std::cout << "Enter the intensity of ambient light";
+	std::cin >> intensity;
+
+	Lights.push_back(new Light("ambient", intensity));
 }
 
 void Scene::setUpScene() {
 	setUpSpheres();
 	setUpLights();
+}
+
+std::vector<Sphere>& Scene::getSpheres() {
+	return spheres;
+}
+
+std::vector<Light*>& Scene::getLights() {
+	return Lights;
 }

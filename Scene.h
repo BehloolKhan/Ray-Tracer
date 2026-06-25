@@ -23,5 +23,12 @@ public:
 	//the lights and spheres in scene
 	//
 	void setUpScene();
+	//method is responsible for returing spheres
+	//
+	std::vector<Sphere>& getSpheres();
+
+	//method is responsible for returning lights
+	//
+	std::vector<Light*>& getLights();
 };
 #endif
