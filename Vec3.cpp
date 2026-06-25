@@ -2,6 +2,7 @@
 //
 #include "Vec3.h"
 #include <iostream>
+#include <cmath>
 
 Vec3::Vec3(float x_, float y_, float z_) {
 	this->x = x_;
@@ -29,4 +30,19 @@ float Vec3::dot(const Vec3& vec1, const Vec3& vec2) {
 
 void Vec3::printAll() {
 	std::cout << "x: " << x << "y: " << y << "z: " << z << '\n';
+}
+
+float Vec3::length() const {
+	float dot_ = dot(*this, *this);
+	return std::sqrt(dot_);
+}
+
+
+
+Vec3 Vec3::multiplier(const Vec3& vec1, float factor) {
+	return Vec3(vec1.x*factor, vec1.y*factor, vec1.z*factor);
+}
+
+Vec3 Vec3::divides(const Vec3& vec1, float factor) {
+	return Vec3(vec1.x/factor, vec1.y/factor, vec1.z/factor);
 }
