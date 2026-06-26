@@ -1,13 +1,13 @@
 #include <iostream>
-#include "Constants.h"
-#include "methods.h"
-#include "Sphere.h"
-#include "Vec3.h"
+#include "core/Constants.h"
+#include "core/methods.h"
+#include "scene/Sphere.h"
+#include "core/Vec3.h"
 #include <tuple>
 #include <limits>
 #include <vector>
-#include "Canvas.h"
-#include "Scene.h"
+#include "core/Canvas.h"
+#include "scene/Scene.h"
 
 int main() {
 	std::cout << "Hello World" << '\n';

@@ -2,7 +2,7 @@
 #define SPHERE_H
 
 #include <tuple>
-#include "Vec3.h"
+#include "../core/Vec3.h"
 
 struct Sphere {
 	Vec3 center;

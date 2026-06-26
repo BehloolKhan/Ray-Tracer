@@ -1,6 +1,6 @@
 #include "ChildLights.h"
 #include "Light.h"
-#include "Vec3.h"
+#include "../core/Vec3.h"
 
 PointLight::PointLight(std::string type_, float intensity_, Vec3& position_) : Light(type_, intensity_) {
 	this->position = position_;

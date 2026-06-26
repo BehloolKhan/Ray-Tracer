@@ -5,7 +5,7 @@
 #define CHILD_LIGHTS_H
 #include <string>
 #include "Light.h"
-#include "Vec3.h"
+#include "../core/Vec3.h"
 
 class PointLight: public Light {
 

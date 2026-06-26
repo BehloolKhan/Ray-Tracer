@@ -3,14 +3,14 @@
 #include "Constants.h"
 #include "Vec3.h"
 #include <tuple>
-#include "Sphere.h"
+#include "../scene/Sphere.h"
 #include <limits>
 #include <cmath>
 #include <vector>
 #include <iostream>
-#include "Scene.h"
+#include "../scene/Scene.h"
 #include "methods.h"
-#include "testFile.h"
+#include "../testFile.h"
 
 //method that returns the corresponding co-ordinate on the view port for a
 //given point on the canvas

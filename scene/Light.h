@@ -3,7 +3,7 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 #include <string>
-#include "Vec3.h"
+#include "../core/Vec3.h"
 
 class Light {
 protected:

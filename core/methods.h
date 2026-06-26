@@ -5,9 +5,9 @@
 
 #include <tuple>
 #include "Vec3.h"
-#include "Sphere.h"
+#include "../scene/Sphere.h"
 #include <vector>
-#include "Scene.h"
+#include "../scene/Scene.h"
 
 //method returns the two t values where a ray interserct a given sphere if it does so
 //if ray doesnt interesect sphere, infinity is returned
