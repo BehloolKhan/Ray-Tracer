@@ -1,6 +1,5 @@
 //This will include the function/procedure definitons for all the functions/procedures used in the book
 //
-
 #include "Constants.h"
 #include "Vec3.h"
 #include <tuple>
@@ -82,12 +81,7 @@ std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, S
 
 	float intensity = computeLighting(P, N_normal, scene);
 	std::tuple<int, int, int> color = closest_sphere->color;
-	std::cout << "The color before multiplying: " << '\n';
-	testFile(color);
-	std::cout << "The intensity: " << intensity << '\n';
 	multiplyColorVector(color, intensity);
-	std::cout << "The color after multiplying: " << '\n';
-	testFile(color);
 	closest_sphere = nullptr;
 
 	return color;
