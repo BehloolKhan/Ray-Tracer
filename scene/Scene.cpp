@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "Sphere.h"
 #include <vector>
 #include "light.h"
 #include "ChildLights.h"
@@ -32,7 +33,13 @@ void Scene::setUpSpheres() {
 		std::cin >> G;
 		std::cin >> B;
 
-		spheres.push_back(Sphere(Vec3(x, y, z), radius, std::tuple<int, int, int>(R, G, B)));
+		//getting the specular value for spheres
+		//
+		int specular_;
+		std::cout << "Enter the specular factor for given sphere";
+		std::cin >> specular_;
+
+		spheres.push_back(Sphere(Vec3(x, y, z), radius, std::tuple<int, int, int>(R, G, B), specular_));
 	}
 }
 
