@@ -79,7 +79,7 @@ std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, S
 	Vec3 N = P - closest_sphere->center;
 	Vec3 N_normal = Vec3::divides(N, N.length());
 
-	float intensity = computeLighting(P, N_normal, scene);
+	float intensity = computeLighting(P, N_normal, scene, closest_sphere->specular);
 	std::tuple<int, int, int> color = closest_sphere->color;
 	multiplyColorVector(color, intensity);
 	closest_sphere = nullptr;
@@ -87,70 +87,43 @@ std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, S
 	return color;
 }
 
-std::vector<Sphere> setUpScene() {
-	std::vector<Sphere> spheres;
-	int numberSpheres;
-	std::cout << "What is the number of spheres?: ";
-	std::cin >> numberSpheres;
-
-	for (int i = 1; i <= numberSpheres; ++i) {
-		//grabbing co-ordinates
-		//
-		float x, y, z;
-		std::cout << "Enter the x, y and z co-ordinates and use space to seperate them: ";
-
-		std::cin >> x;
-		std::cin >> y;
-		std::cin >> z;
-
-		//getting radius
-		//
-		float radius;
-		std::cout << "Enter the radius of sphere " << i << ": ";
-		std::cin >> radius;
-
-		//getting the color values
-		int R, G, B;
-		std::cout << "Enter the format of the color in the form of R G B where each val between 0-255: ";
-		std::cin >> R;
-		std::cin >> G;
-		std::cin >> B;
-
-		spheres.push_back(Sphere(Vec3(x, y, z), radius, std::tuple<int, int, int>(R, G, B)));
-	}
-
-	return spheres;
-}
-
-float computeLighting(Vec3& P, Vec3& N, Scene& scene) {
+float computeLighting(Vec3& P, Vec3& N, Scene& scene, int specular_) {
 	float i = 0.0;
-	std::cout << "Print P: " << '\n';
 	P.printAll();
-	std::cout << "Print N: " << '\n';
 	N.printAll();
 	for (Light* light: scene.getLights()){
 		if (light->getType() == "ambient") {
 			i += light->getIntensity();
-			std::cout << "Value of i after ambient light is added: " << i << '\n';
 		}
 		else {
 			Vec3 L;
 			if (light->getType() == "point") {
 				L = light->getPosition() - P;
-				std::cout << "Print L: " << '\n';
-				L.printAll();
 			}
 
 			else if (light->getType() == "directional") {
 				L = light->getDirection();
-				std::cout << "Print L: " << '\n';
-				L.printAll();
 			}
 
+			//diffuse Reflection
+			//
 			float n_dot_L = Vec3::dot(N, L);
 			if (n_dot_L >= 0.0) {
 				i += (light->getIntensity() * n_dot_L / (N.length() * L.length()));
-				std::cout << "Value of i after point/directional light is added: " << i << '\n';
+			}
+
+			//specular Reflection
+			//
+			if (specular_ != -1) {
+
+				Vec3 R = Vec3::multiplier(N, 2 * n_dot_L) - L;
+				Vec3 V_ = origin - P;
+
+				float cos_a = Vec3::dot(R, V_);
+				cos_a = cos_a / (R.length() * V_.length());
+				float cos_a_raised = std::pow(cos_a, (float)specular_);
+
+				i += (light->getIntensity() * cos_a_raised);
 			}
 		}
 	}
