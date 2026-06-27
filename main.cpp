@@ -18,7 +18,6 @@ int main() {
 	Canvas canvas{}; //use curly brace to initialise Canvas object;
 
 	scene.setUpScene(); //get the information we need;
-	std::cout << "Canvas and scene object has been set up: " << '\n';
 
 	for (int x = -CANVAS_WIDTH / 2; x < CANVAS_WIDTH / 2; ++x) {
 		for (int y = -CANVAS_HEIGHT / 2; y < CANVAS_HEIGHT / 2; ++y) {
