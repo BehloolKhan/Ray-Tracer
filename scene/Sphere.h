@@ -8,6 +8,7 @@ struct Sphere {
 	Vec3 center;
 	float radius;
 	std::tuple<int, int, int> color; 
-	Sphere(Vec3 center_, float radius_, std::tuple<int, int, int> color_);
+	int specular;
+	Sphere(Vec3 center_, float radius_, std::tuple<int, int, int> color_, int specular_);
 };
 #endif
