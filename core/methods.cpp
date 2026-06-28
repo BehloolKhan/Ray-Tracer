@@ -86,7 +86,7 @@ std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, S
 	Vec3 N = P - std::get<0>(results)->center;
 	Vec3 N_normal = Vec3::divides(N, N.length());
 
-	float intensity = computeLighting(P, N_normal, scene, std::get<0>(results)->specular);
+	float intensity = computeLighting(O, P, N_normal, scene, std::get<0>(results)->specular);
 	std::tuple<int, int, int> color = std::get<0>(results)->color;
 	multiplyColorVector(color, intensity);
 	std::get<0>(results) = nullptr;
@@ -94,7 +94,7 @@ std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, S
 	return color;
 }
 
-float computeLighting(Vec3& P, Vec3& N, Scene& scene, int specular_) {
+float computeLighting(Vec3& O, Vec3& P, Vec3& N, Scene& scene, int specular_) {
 	float i = 0.0;
 	P.printAll();
 	N.printAll();
@@ -134,7 +134,7 @@ float computeLighting(Vec3& P, Vec3& N, Scene& scene, int specular_) {
 				if (specular_ != -1) {
 
 					Vec3 R = Vec3::multiplier(N, 2 * n_dot_L) - L;
-					Vec3 V_ = origin - P;
+					Vec3 V_ = O - P;
 
 					float cos_a = Vec3::dot(R, V_);
 					cos_a = cos_a / (R.length() * V_.length());
