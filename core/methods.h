@@ -33,5 +33,5 @@ void multiplyColorVector(std::tuple<int, int, int>& color, float factor);
 
 //method that extracts the closesest intersection of the TraceRay part method so it can be reused;
 //
-std::tuple<Sphere*, float>closestIntersection(Vec3& orign, Vec3& direction_, float t_min, float t_max, Scene& scene);
+std::tuple<Sphere*, float>closestIntersection(Vec3& O, Vec3& direction_, float t_min, float t_max, Scene& scene);
 #endif

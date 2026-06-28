@@ -43,13 +43,13 @@ std::tuple<float, float> IntersectRaySphere(Vec3& O, Vec3& D, Sphere sphere) {
 
 }
 
-std::tuple<Sphere*, float>closestIntersection(Vec3& orign, Vec3& direction_, float t_min, float t_max, Scene& scene) {
+std::tuple<Sphere*, float>closestIntersection(Vec3& O, Vec3& direction_, float t_min, float t_max, Scene& scene) {
 	float closest_t = std::numeric_limits<float>::infinity();
 	Sphere* closest_sphere = nullptr;
 
 	for (Sphere& currentSphere : scene.getSpheres()) {
 
-		std::tuple<float, float> t_values = IntersectRaySphere(origin, direction_, currentSphere);
+		std::tuple<float, float> t_values = IntersectRaySphere(O, direction_, currentSphere);
 		float t1 = std::get<0>(t_values);
 		float t2 = std::get<1>(t_values);
 
@@ -121,30 +121,29 @@ float computeLighting(Vec3& P, Vec3& N, Scene& scene, int specular_) {
 			//
 			std::tuple<Sphere*, float> results = closestIntersection(P, L, 0.0001, t_max, scene);
 
-			if (std::get<0>(results) != nullptr) { //no intersection between point P and source of light
-				continue;
+			if (std::get<0>(results) == nullptr) { //no intersection between point P and source of light
+				//diffuse Reflection
+				//
+				float n_dot_L = Vec3::dot(N, L);
+				if (n_dot_L >= 0.0) {
+					i += (light->getIntensity() * n_dot_L / (N.length() * L.length()));
+				}
+
+				//specular Reflection
+				//
+				if (specular_ != -1) {
+
+					Vec3 R = Vec3::multiplier(N, 2 * n_dot_L) - L;
+					Vec3 V_ = origin - P;
+
+					float cos_a = Vec3::dot(R, V_);
+					cos_a = cos_a / (R.length() * V_.length());
+					float cos_a_raised = std::pow(cos_a, (float)specular_);
+
+					i += (light->getIntensity() * cos_a_raised);
+				}
 			}
 
-			//diffuse Reflection
-			//
-			float n_dot_L = Vec3::dot(N, L);
-			if (n_dot_L >= 0.0) {
-				i += (light->getIntensity() * n_dot_L / (N.length() * L.length()));
-			}
-
-			//specular Reflection
-			//
-			if (specular_ != -1) {
-
-				Vec3 R = Vec3::multiplier(N, 2 * n_dot_L) - L;
-				Vec3 V_ = origin - P;
-
-				float cos_a = Vec3::dot(R, V_);
-				cos_a = cos_a / (R.length() * V_.length());
-				float cos_a_raised = std::pow(cos_a, (float)specular_);
-
-				i += (light->getIntensity() * cos_a_raised);
-			}
 		}
 	}
 
