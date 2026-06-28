@@ -25,7 +25,7 @@ Vec3 canvasToViewPort(int x, int y);
 
 //method that calculates the intensity at a given point P
 //
-float computeLighting(Vec3& P, Vec3& N, Scene& scene, int specular);
+float computeLighting(Vec3& O, Vec3& P, Vec3& N, Scene& scene, int specular);
 
 //method that allows us to muliply a color vector by a number
 //
