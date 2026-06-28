@@ -43,13 +43,13 @@ std::tuple<float, float> IntersectRaySphere(Vec3& O, Vec3& D, Sphere sphere) {
 
 }
 
-std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, Scene& scene) {
+std::tuple<Sphere*, float>closestIntersection(Vec3& orign, Vec3& direction_, float t_min, float t_max, Scene& scene) {
 	float closest_t = std::numeric_limits<float>::infinity();
 	Sphere* closest_sphere = nullptr;
 
 	for (Sphere& currentSphere : scene.getSpheres()) {
 
-		std::tuple<float, float> t_values = IntersectRaySphere(O, D, currentSphere);
+		std::tuple<float, float> t_values = IntersectRaySphere(origin, direction_, currentSphere);
 		float t1 = std::get<0>(t_values);
 		float t2 = std::get<1>(t_values);
 
@@ -68,21 +68,28 @@ std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, S
 
 	}
 
-	if (closest_sphere == nullptr) {
+	return {closest_sphere, closest_t};
+}
+
+std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, Scene& scene) {
+
+	std::tuple<Sphere*, float> results = closestIntersection(O, D, t_min, t_max, scene);
+
+	if (std::get<0>(results) == nullptr) {
 		return BACKGROUND_COLOUR;
 	}
 
 	//Now lets compute the intensity at the point of intersection
 	//
 
-	Vec3 P = O + Vec3::multiplier(D, closest_t);
-	Vec3 N = P - closest_sphere->center;
+	Vec3 P = O + Vec3::multiplier(D, std::get<1>(results));
+	Vec3 N = P - std::get<0>(results)->center;
 	Vec3 N_normal = Vec3::divides(N, N.length());
 
-	float intensity = computeLighting(P, N_normal, scene, closest_sphere->specular);
-	std::tuple<int, int, int> color = closest_sphere->color;
+	float intensity = computeLighting(P, N_normal, scene, std::get<0>(results)->specular);
+	std::tuple<int, int, int> color = std::get<0>(results)->color;
 	multiplyColorVector(color, intensity);
-	closest_sphere = nullptr;
+	std::get<0>(results) = nullptr;
 
 	return color;
 }
@@ -91,18 +98,31 @@ float computeLighting(Vec3& P, Vec3& N, Scene& scene, int specular_) {
 	float i = 0.0;
 	P.printAll();
 	N.printAll();
+
 	for (Light* light: scene.getLights()){
 		if (light->getType() == "ambient") {
 			i += light->getIntensity();
 		}
 		else {
+			float t_max = std::numeric_limits<float>::infinity(); //by default we will assume light is directional and then change t_max
+			//if it is not
+
 			Vec3 L;
 			if (light->getType() == "point") {
 				L = light->getPosition() - P;
+				t_max = 1;
 			}
 
 			else if (light->getType() == "directional") {
 				L = light->getDirection();
+			}
+
+			//checking to see if there is a shadow
+			//
+			std::tuple<Sphere*, float> results = closestIntersection(P, L, 0.0001, t_max, scene);
+
+			if (std::get<0>(results) != nullptr) { //no intersection between point P and source of light
+				continue;
 			}
 
 			//diffuse Reflection
