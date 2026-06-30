@@ -38,11 +38,14 @@ float Vec3::length() const {
 }
 
 
-
 Vec3 Vec3::multiplier(const Vec3& vec1, float factor) {
 	return Vec3(vec1.x*factor, vec1.y*factor, vec1.z*factor);
 }
 
 Vec3 Vec3::divides(const Vec3& vec1, float factor) {
 	return Vec3(vec1.x/factor, vec1.y/factor, vec1.z/factor);
+}
+
+Vec3 Vec3::operator-() {
+	return Vec3(-x, -y, -z);
 }

@@ -35,6 +35,9 @@ struct Vec3 {
 	//
 	float length() const;
 
+	//method thet allows vector to become negative;
+	//
+	Vec3 operator-();
 	
 };
 
