@@ -71,7 +71,7 @@ std::tuple<Sphere*, float>closestIntersection(Vec3& O, Vec3& direction_, float t
 	return {closest_sphere, closest_t};
 }
 
-std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, Scene& scene) {
+std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, Scene& scene, int recursionDepth) {
 
 	std::tuple<Sphere*, float> results = closestIntersection(O, D, t_min, t_max, scene);
 
@@ -81,17 +81,27 @@ std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, S
 
 	//Now lets compute the intensity at the point of intersection
 	//
-
 	Vec3 P = O + Vec3::multiplier(D, std::get<1>(results));
 	Vec3 N = P - std::get<0>(results)->center;
 	Vec3 N_normal = Vec3::divides(N, N.length());
 
-	float intensity = computeLighting(O, P, N_normal, scene, std::get<0>(results)->specular);
-	std::tuple<int, int, int> color = std::get<0>(results)->color;
-	multiplyColorVector(color, intensity);
-	std::get<0>(results) = nullptr;
 
-	return color;
+	float intensity = computeLighting(O, P, N_normal, scene, std::get<0>(results)->specular);
+	std::tuple<int, int, int> localColor = std::get<0>(results)->color;
+	multiplyColorVector(localColor, intensity);
+
+	float r = std::get<0>(results)->reflective;
+	if((recursionDepth <= 0 ) || (r<=0.0)) {
+		return localColor;
+	}
+
+	Vec3 R = reflectRay(-D, N_normal);
+	std::tuple<int, int, int> reflectedColor = TraceRay(P, R, (float)0.001, std::numeric_limits<float>::infinity(), scene, recursionDepth-1);
+
+	multiplyColorVector(localColor, (float)1.0-r);
+	multiplyColorVector(reflectedColor, r);
+
+	return addTwoColors(localColor, reflectedColor);
 }
 
 float computeLighting(Vec3& O, Vec3& P, Vec3& N, Scene& scene, int specular_) {
@@ -119,7 +129,7 @@ float computeLighting(Vec3& O, Vec3& P, Vec3& N, Scene& scene, int specular_) {
 
 			//checking to see if there is a shadow
 			//
-			std::tuple<Sphere*, float> results = closestIntersection(P, L, 0.0001, t_max, scene);
+			std::tuple<Sphere*, float> results = closestIntersection(P, L, (float)0.001, t_max, scene);
 
 			if (std::get<0>(results) == nullptr) { //no intersection between point P and source of light
 				//diffuse Reflection
@@ -164,4 +174,18 @@ void multiplyColorVector(std::tuple<int, int, int>& color, float factor) {
 	std::get<0>(color) = (int)(std::get<0>(color) * factor);
 	std::get<1>(color) = (int)(std::get<1>(color) * factor);
 	std::get<2>(color) = (int)(std::get<2>(color) * factor);
+}
+
+Vec3 reflectRay(Vec3& R, Vec3& N) {
+	float a = 2*Vec3::dot(R, N);
+	Vec3 vector = Vec3::multiplier(N, a) - R;
+	return vector;
+}
+
+std::tuple<int, int, int> addTwoColors(std::tuple<int, int, int>& color, std::tuple<int, int, int>& colorOne) {
+	int value1 = std::get<0>(color) + std::get<0>(colorOne);
+	int value2 = std::get<1>(color) + std::get<1>(colorOne);
+	int value3 = std::get<2>(color) + std::get<2>(colorOne);
+
+	return { value1, value2, value3 };
 }
