@@ -24,7 +24,7 @@ int main() {
 			Vec3 V = canvasToViewPort(x, y);
 			Vec3 D = V - origin;
 			float posInf = std::numeric_limits<float>::infinity();
-			std::tuple<int, int, int> color = TraceRay(origin, D, 1.0, posInf, scene);
+			std::tuple<int, int, int> color = TraceRay(origin, D, 1.0, posInf, scene, 3);
 			canvas.putPixel(x, y, color);
 		}
 	}
