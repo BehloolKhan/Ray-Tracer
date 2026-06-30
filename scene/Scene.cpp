@@ -39,7 +39,13 @@ void Scene::setUpSpheres() {
 		std::cout << "Enter the specular factor for given sphere";
 		std::cin >> specular_;
 
-		spheres.push_back(Sphere(Vec3(x, y, z), radius, std::tuple<int, int, int>(R, G, B), specular_));
+		//getting the reflectiveness of sphere
+		//
+		float reflection_;
+		std::cout << "Enter reflective value - from 0.0 to 1.0";
+		std::cin >> reflection_;
+
+		spheres.push_back(Sphere(Vec3(x, y, z), radius, std::tuple<int, int, int>(R, G, B), specular_, reflection_));
 	}
 }
 
