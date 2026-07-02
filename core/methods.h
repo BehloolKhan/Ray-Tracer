@@ -42,4 +42,8 @@ std::tuple<Sphere*, float>closestIntersection(Vec3& O, Vec3& direction_, float t
 //method, given a ray returns the reflective ray with respect to normal
 //
 Vec3 reflectRay(Vec3& R, Vec3&N);
+
+//method multiplies a One dimensional vector by a 3D rotation matrix
+//
+Vec3 operator*(float (&rotation)[3][3], const Vec3&dir);
 #endif

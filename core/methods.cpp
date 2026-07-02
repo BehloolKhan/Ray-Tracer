@@ -189,3 +189,18 @@ std::tuple<int, int, int> addTwoColors(std::tuple<int, int, int>& color, std::tu
 
 	return { value1, value2, value3 };
 }
+
+Vec3 operator*(float(&rotation)[3][3], const Vec3& dir) {
+	float outputResult[3];
+	float vec3array[3] = {dir.x, dir.y, dir.z};
+
+	for (int i = 0; i < 3; ++i) {
+		float total = 0;
+		for (int j = 0; j < 3; ++j) {
+			total += (vec3array[j]*rotation[i][j]);
+		}
+		outputResult[i] = total;
+	}
+
+	return Vec3(outputResult[0], outputResult[1], outputResult[2]);
+}
