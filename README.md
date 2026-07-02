@@ -29,7 +29,7 @@ The last part of the book talks about how we can extend the Ray Tracer to make i
 - go the header file called `Constants.h` located in the `core` folder: **`core\Constants.h`**
 - go to line **16** and you will find the variable called `origin` and change it to where you want to put the camera
 
-### Rotate the Camera
+### Rotating the Camera
 This section explains what happens when you rotate the camera:
 - When camera is rotated, the view port must also be rotated
 - This is to make sure the view port remains as a perfect square infront of the camera lens
