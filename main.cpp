@@ -22,7 +22,7 @@ int main() {
 	for (int x = -CANVAS_WIDTH / 2; x < CANVAS_WIDTH / 2; ++x) {
 		for (int y = -CANVAS_HEIGHT / 2; y < CANVAS_HEIGHT / 2; ++y) {
 			Vec3 V = canvasToViewPort(x, y);
-			Vec3 D = V - origin;
+			Vec3 D = V;
 			float posInf = std::numeric_limits<float>::infinity();
 			std::tuple<int, int, int> color = TraceRay(origin, D, 1.0, posInf, scene, 3);
 			canvas.putPixel(x, y, color);
