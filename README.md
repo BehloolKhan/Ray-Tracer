@@ -22,3 +22,9 @@
 - you can change the dimesnions of the output ppm file by modifiying the canvas width and canvas height
 - locate the `Constants.h` header file
 - modify the values `CANVAS_WIDTH` and `CANVAS_HEIGHT` on line 9 and 10 respectively
+
+## Extending the Ray Tracer
+The last part of the book talks about how we can extend the Ray Tracer to make it better and we will be implementing those changes
+### Changing the location of the camera:
+- go the header file called `Constants.h` located in the `core` folder: **`core\Constants.h`**
+- go to line 16 and you will find the variable called `origin` and change it to where you want to put the camera
