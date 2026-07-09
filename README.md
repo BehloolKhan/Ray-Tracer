@@ -36,3 +36,9 @@ This section explains what happens when you rotate the camera:
 - `V` is the direction vector from camera location to location on viewport so we multiply that by the rotation matrix
 - To edit the rotation matrix: go to the header file called `Constants.h` located in the `core` folder: **`core\Constants.h`**
 - go to line **19** and edit the matrix there
+
+### Parallelisation
+- speeding up the ray tracer with parallisation
+- if you go to **`main.cpp`** file, you will see this implemented it
+- The way I did it, was I broke down the range of x_co-ordinates into chunks based on the number of availbale cores: `std::thread::hardware_concurrency_` on line `35`
+- I then essentially performed the same function on the different chunks of x-coordinates_
