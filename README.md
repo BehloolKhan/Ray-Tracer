@@ -42,3 +42,12 @@ This section explains what happens when you rotate the camera:
 - if you go to **`main.cpp`** file, you will see this implemented it
 - The way I did it, was I broke down the range of x_co-ordinates into chunks based on the number of availbale cores: `std::thread::hardware_concurrency_` on line `35`
 - I then essentially performed the same function on the different chunks of x-coordinates_
+
+### Shadows
+- Another one to optimise ray tracer is to optimise by shadows
+- If you go to line **175** in `core\methods.cpp`, you will see the method `isIntersection` being called which has replaced the method `closestIntersection` being called
+- Before the new method was called, to decide if a there lay a sphere between p and a light source, we would calculate the closest sphere being intersected
+- But in order for a shadow to form, The ray starting from point P, going towards light source must intersect with at least one sphere, and once we find one intersection, we can stop right there
+- That is why the method `isIntersection` returns `true` once it finds just one intersection
+- In addition, if a point P lies in a shadow, due to an intersection with a sphere, than there is a chance its neighbouting points also lie in a shadow
+- The pointer on line **16** - `shadowSphere` points to `Sphere` object which is the Sphere that has recently caused a shadow
