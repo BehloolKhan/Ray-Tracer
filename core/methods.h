@@ -39,6 +39,10 @@ std::tuple<int, int, int> addTwoColors(std::tuple<int, int, int>& color, std::tu
 //
 std::tuple<Sphere*, float>closestIntersection(Vec3& O, Vec3& direction_, float t_min, float t_max, Scene& scene);
 
+//method that tests to see if the ray intersects with the bounding sphere
+//
+bool intersectsBoundingSphere(Vec3& O, Vec3& direction_, float t_min, float t_max, Scene& scene);
+
 //method that is a version of closestIntersection but returns true if there is any intersection between point P and any of the spheres
 //
 bool isIntersection(Vec3& P, Vec3& direction_, float t_min, float t_max, Scene& scene, Sphere* shadowSphere);

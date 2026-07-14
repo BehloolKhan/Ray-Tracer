@@ -43,9 +43,32 @@ std::tuple<float, float> IntersectRaySphere(Vec3& O, Vec3& D, Sphere sphere) {
 
 }
 
+bool intersectsBoundingSphere(Vec3& O, Vec3& direction_, float t_min, float t_max, Scene& scene) {
+
+	std::tuple<float, float> t_values = IntersectRaySphere(O, direction_, Sphere(scene.getBoundingSphereCentre(), scene.getBoundingSphereRadius(), {0, 0, 0}, 0, 0.0)); //passing in dumby values for color, specular and reflective values because it doesnt matter
+	if (std::get<0>(t_values) <= t_max && std::get<0>(t_values) >= t_min) {
+		return true;
+	}
+
+	if (std::get<1>(t_values) <= t_max && std::get<1>(t_values) >= t_min) {
+		return true;
+	}
+
+	return false; //no intersection
+
+}
+
 std::tuple<Sphere*, float>closestIntersection(Vec3& O, Vec3& direction_, float t_min, float t_max, Scene& scene) {
 	float closest_t = std::numeric_limits<float>::infinity();
 	Sphere* closest_sphere = nullptr;
+
+	//lets check to see if it intesects bounding spheres
+	//
+	if (scene.makeBoundingSphere()) {
+		if (!intersectsBoundingSphere(O, direction_, t_min, t_max, scene)) {
+			return { closest_sphere, closest_t}; //  to show that it doesnt intersect all
+		}
+	}
 
 	for (Sphere& currentSphere : scene.getSpheres()) {
 
