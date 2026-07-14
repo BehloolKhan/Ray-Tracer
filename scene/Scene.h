@@ -6,11 +6,15 @@
 #include <vector>
 #include "light.h"
 #include "ChildLights.h"
+#include "../core/Vec3.h"
 
 class Scene {
 private:
 	std::vector<Sphere> spheres;
 	std::vector<Light*> Lights;
+	Vec3 center_public_sphere;
+	float boundingSphereRadius;
+	bool sphereCalculated = false; // this it to keep track of weather or not the bounding sphere dimesnions have already been calculated
 
 public:
 	//method that sets up the spheres in the scene+
@@ -30,5 +34,25 @@ public:
 	//method is responsible for returning lights
 	//
 	std::vector<Light*>& getLights();
+
+	//method that sets out the center of the bounding sphere
+	//
+	void setBoundingCenter();
+
+	//method to set the radius of the bounding sphere - center and radius
+	//
+	void setBoundingRadius();
+
+	//method that calculate weather we should procede with the bounding sphere
+	//
+	bool makeBoundingSphere();
+
+	//method that returns boundingSphere radius
+	//
+	float getBoundingSphereRadius();
+
+	//method that returns the center of the bounding sphere
+	//
+	Vec3& getBoundingSphereCentre();
 };
 #endif

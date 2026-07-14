@@ -4,6 +4,14 @@
 #include "light.h"
 #include "ChildLights.h"
 #include <iostream>
+#include <limits>
+#include <cmath>
+
+//method to compute the average of two extreme co-ordinates
+//
+float average(float x, float y) {
+	return ((x+y)/2);
+}
 
 void Scene::setUpSpheres() {
 	int numberSpheres;
@@ -108,4 +116,97 @@ std::vector<Sphere>& Scene::getSpheres() {
 
 std::vector<Light*>& Scene::getLights() {
 	return Lights;
+}
+
+void Scene::setBoundingCenter() {
+	float x_min = std::numeric_limits<float>::infinity();
+	float x_max = -std::numeric_limits<float>::infinity();
+
+	float y_min = std::numeric_limits<float>::infinity();
+	float y_max = -std::numeric_limits<float>::infinity();
+
+	float z_min = std::numeric_limits<float>::infinity();
+	float z_max = -std::numeric_limits<float>::infinity();
+
+	for (int i = 0; i < spheres.size(); i++) {
+
+		//setting the min next
+		if (spheres.at(i).center.x < x_min) {
+			x_min = spheres.at(i).center.x;
+		}
+
+		if (spheres.at(i).center.y < y_min) {
+			y_min = spheres.at(i).center.y;
+		}
+
+		if (spheres.at(i).center.z < z_min) {
+			z_min = spheres.at(i).center.z;
+		}
+
+		//setting the max next
+		if (spheres.at(i).center.x > x_max) {
+			x_max = spheres.at(i).center.x;
+		}
+
+		if (spheres.at(i).center.y > y_max) {
+			y_max = spheres.at(i).center.y;
+		}
+
+		if (spheres.at(i).center.z > z_max) {
+			z_max = spheres.at(i).center.z;
+		}
+	}
+
+	center_public_sphere = Vec3(average(x_min, x_max), average(y_min, y_max), average(z_min, z_max));
+}
+void Scene::setBoundingRadius() {
+	//assume we already have the center of the three spheres;
+	//
+	std::vector<float> distances;
+
+	for (int i = 0; i < spheres.size(); ++i) {
+		Vec3 sphereToCentre = spheres.at(i).center - center_public_sphere;
+		distances.push_back(sphereToCentre.length() + spheres.at(i).radius);
+	}
+
+	//next we need to find the maximum of the distances
+	//
+	float max_radius = -std::numeric_limits<float>::infinity();
+	for (int i = 0; i < spheres.size(); ++i) {
+		if (spheres.at(i).radius > max_radius) {
+			max_radius = spheres.at(i).radius;
+		}
+	}
+
+	boundingSphereRadius = max_radius;
+}
+
+bool Scene::makeBoundingSphere() {
+
+	if (!sphereCalculated) {
+		setBoundingCenter();
+		setBoundingRadius();
+		sphereCalculated = true;
+	}
+
+
+	//first we need to do the ratio test
+	//
+	float total_vol_spheres = 0.0;
+	for (int i = 0; i < spheres.size(); ++i) {
+		total_vol_spheres += std::pow(spheres.at(i).radius, (float)3);
+	}
+
+	float total_vol_boundingSpheres = std::pow(boundingSphereRadius, (float)3);
+
+	return ((total_vol_boundingSpheres / total_vol_spheres) <= 1.5);
+
+}
+
+float Scene::getBoundingSphereRadius() {
+	return boundingSphereRadius;
+}
+
+Vec3& Scene::getBoundingSphereCentre() {
+	return center_public_sphere;
 }
