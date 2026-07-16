@@ -210,3 +210,18 @@ float Scene::getBoundingSphereRadius() {
 Vec3& Scene::getBoundingSphereCentre() {
 	return center_public_sphere;
 }
+
+void Scene::setUpBoundingTree() {
+	//assume the information about the spheres has been calculated
+	//first - we need to figure out the the longest dimension along the x,y,z axis
+	//
+	float x_range;
+	float y_range;
+	float z_range;
+
+	float x_min;
+
+	for (Sphere& currentSphere : spheres) {
+
+	}
+}

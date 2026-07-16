@@ -7,6 +7,7 @@
 #include "light.h"
 #include "ChildLights.h"
 #include "../core/Vec3.h"
+#include "BoundingTree.h"
 
 class Scene {
 private:
@@ -15,6 +16,9 @@ private:
 	Vec3 center_public_sphere;
 	float boundingSphereRadius;
 	bool sphereCalculated = false; // this it to keep track of weather or not the bounding sphere dimesnions have already been calculated
+	char BoundingAxis;
+
+	BoundingTree BoundingSpheres;
 
 public:
 	//method that sets up the spheres in the scene+
@@ -54,5 +58,11 @@ public:
 	//method that returns the center of the bounding sphere
 	//
 	Vec3& getBoundingSphereCentre();
+
+	//method that will set up the bounding boxes;
+	//
+	void setUpBoundingTree();
+
+
 };
 #endif
