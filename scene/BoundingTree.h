@@ -6,13 +6,24 @@
 
 class BoundingTree {
 
+private:
 	BoundingBox rootNode;
-
-	BoundingTree(BoundingBox rootNode); 
 
 	std::unique_ptr<BoundingTree> leftTree;
 	std::unique_ptr<BoundingTree> rightTree;
 
+public:
 	void setLeftChild(BoundingTree* leftTree_);
 	void setRightChild(BoundingTree* rightTree_);
+
+	BoundingTree* getLeftChild() const;
+	BoundingTree* getRightChild() const;
+
+	//method that adjusts the dimesnions of root node bounding box
+	//
+	void setRootNode(Vec3 new_min, Vec3 new_max);
+
+	//returns a reference to the rootNode
+	//
+	BoundingBox& getRootNode();
 };
