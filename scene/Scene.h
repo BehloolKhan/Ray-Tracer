@@ -8,10 +8,11 @@
 #include "ChildLights.h"
 #include "../core/Vec3.h"
 #include "BoundingTree.h"
+#include "ListSpheres.h"
 
 class Scene {
 private:
-	std::vector<Sphere> spheres;
+	ListSpheres spheresCollection;
 	std::vector<Light*> Lights;
 	Vec3 center_public_sphere;
 	float boundingSphereRadius;
@@ -21,12 +22,15 @@ private:
 	BoundingTree BoundingSpheres;
 
 public:
+
 	//method that sets up the spheres in the scene+
 	//
 	void setUpSpheres();
+
 	//method sets up the light sources in the scene
 	//
 	void setUpLights();
+
 	//method is responsible for setting up all
 	//the lights and spheres in scene
 	//
@@ -58,10 +62,6 @@ public:
 	//method that returns the center of the bounding sphere
 	//
 	Vec3& getBoundingSphereCentre();
-
-	//method that will set up the bounding boxes;
-	//
-	void setUpBoundingTree();
 
 
 };

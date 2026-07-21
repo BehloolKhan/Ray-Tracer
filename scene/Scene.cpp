@@ -53,7 +53,7 @@ void Scene::setUpSpheres() {
 		std::cout << "Enter reflective value - from 0.0 to 1.0";
 		std::cin >> reflection_;
 
-		spheres.push_back(Sphere(Vec3(x, y, z), radius, std::tuple<int, int, int>(R, G, B), specular_, reflection_));
+		spheresCollection.spheres.push_back(Sphere(Vec3(x, y, z), radius, std::tuple<int, int, int>(R, G, B), specular_, reflection_));
 	}
 }
 
@@ -111,7 +111,7 @@ void Scene::setUpScene() {
 }
 
 std::vector<Sphere>& Scene::getSpheres() {
-	return spheres;
+	return spheresCollection.spheres;
 }
 
 std::vector<Light*>& Scene::getLights() {
@@ -128,32 +128,32 @@ void Scene::setBoundingCenter() {
 	float z_min = std::numeric_limits<float>::infinity();
 	float z_max = -std::numeric_limits<float>::infinity();
 
-	for (int i = 0; i < spheres.size(); i++) {
+	for (int i = 0; i < spheresCollection.spheres.size(); i++) {
 
 		//setting the min next
-		if (spheres.at(i).center.x < x_min) {
-			x_min = spheres.at(i).center.x;
+		if (spheresCollection.spheres.at(i).center.x < x_min) {
+			x_min = spheresCollection.spheres.at(i).center.x;
 		}
 
-		if (spheres.at(i).center.y < y_min) {
-			y_min = spheres.at(i).center.y;
+		if (spheresCollection.spheres.at(i).center.y < y_min) {
+			y_min = spheresCollection.spheres.at(i).center.y;
 		}
 
-		if (spheres.at(i).center.z < z_min) {
-			z_min = spheres.at(i).center.z;
+		if (spheresCollection.spheres.at(i).center.z < z_min) {
+			z_min = spheresCollection.spheres.at(i).center.z;
 		}
 
 		//setting the max next
-		if (spheres.at(i).center.x > x_max) {
-			x_max = spheres.at(i).center.x;
+		if (spheresCollection.spheres.at(i).center.x > x_max) {
+			x_max = spheresCollection.spheres.at(i).center.x;
 		}
 
-		if (spheres.at(i).center.y > y_max) {
-			y_max = spheres.at(i).center.y;
+		if (spheresCollection.spheres.at(i).center.y > y_max) {
+			y_max = spheresCollection.spheres.at(i).center.y;
 		}
 
-		if (spheres.at(i).center.z > z_max) {
-			z_max = spheres.at(i).center.z;
+		if (spheresCollection.spheres.at(i).center.z > z_max) {
+			z_max = spheresCollection.spheres.at(i).center.z;
 		}
 	}
 
@@ -164,17 +164,17 @@ void Scene::setBoundingRadius() {
 	//
 	std::vector<float> distances;
 
-	for (int i = 0; i < spheres.size(); ++i) {
-		Vec3 sphereToCentre = spheres.at(i).center - center_public_sphere;
-		distances.push_back(sphereToCentre.length() + spheres.at(i).radius);
+	for (int i = 0; i < spheresCollection.spheres.size(); ++i) {
+		Vec3 sphereToCentre = spheresCollection.spheres.at(i).center - center_public_sphere;
+		distances.push_back(sphereToCentre.length() + spheresCollection.spheres.at(i).radius);
 	}
 
 	//next we need to find the maximum of the distances
 	//
 	float max_radius = -std::numeric_limits<float>::infinity();
-	for (int i = 0; i < spheres.size(); ++i) {
-		if (spheres.at(i).radius > max_radius) {
-			max_radius = spheres.at(i).radius;
+	for (int i = 0; i < spheresCollection.spheres.size(); ++i) {
+		if (spheresCollection.spheres.at(i).radius > max_radius) {
+			max_radius = spheresCollection.spheres.at(i).radius;
 		}
 	}
 
@@ -193,8 +193,8 @@ bool Scene::makeBoundingSphere() {
 	//first we need to do the ratio test
 	//
 	float total_vol_spheres = 0.0;
-	for (int i = 0; i < spheres.size(); ++i) {
-		total_vol_spheres += std::pow(spheres.at(i).radius, (float)3);
+	for (int i = 0; i < spheresCollection.spheres.size(); ++i) {
+		total_vol_spheres += std::pow(spheresCollection.spheres.at(i).radius, (float)3);
 	}
 
 	float total_vol_boundingSpheres = std::pow(boundingSphereRadius, (float)3);
@@ -209,19 +209,4 @@ float Scene::getBoundingSphereRadius() {
 
 Vec3& Scene::getBoundingSphereCentre() {
 	return center_public_sphere;
-}
-
-void Scene::setUpBoundingTree() {
-	//assume the information about the spheres has been calculated
-	//first - we need to figure out the the longest dimension along the x,y,z axis
-	//
-	float x_range;
-	float y_range;
-	float z_range;
-
-	float x_min;
-
-	for (Sphere& currentSphere : spheres) {
-
-	}
 }
