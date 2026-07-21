@@ -37,7 +37,7 @@ int main() {
 
 	//setting up the scene
 	//
-	Scene scene{};
+	Scene scene;
 	Canvas canvas{}; //use curly brace to initialise Canvas object;
 
 	scene.setUpScene(); //get the information we need;
