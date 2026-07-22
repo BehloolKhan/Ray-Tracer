@@ -49,7 +49,7 @@ bool isIntersection(Vec3& P, Vec3& direction_, float t_min, float t_max, Scene& 
 
 //method, given a ray returns the reflective ray with respect to normal
 //
-Vec3 reflectRay(Vec3& R, Vec3&N);
+Vec3 reflectRay(const Vec3& R, const Vec3&N);
 
 //method multiplies a One dimensional vector by a 3D rotation matrix
 //
