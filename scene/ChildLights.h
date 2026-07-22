@@ -13,7 +13,7 @@ private:
 	Vec3 position;
 
 public:
-	PointLight(std::string type_, float intensity_, Vec3& position_);
+	PointLight(std::string type_, float intensity_, const Vec3& position_);
 	Vec3 getPosition();
 };
 
@@ -23,7 +23,7 @@ private:
 	Vec3 direction;
 
 public:
-	DirectionalLight(std::string type_, float intensity_, Vec3& direction_);
+	DirectionalLight(std::string type_, float intensity_, const Vec3& direction_);
 	Vec3 getDirection();
 };
 #endif
