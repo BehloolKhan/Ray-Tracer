@@ -51,3 +51,18 @@ This section explains what happens when you rotate the camera:
 - That is why the method `isIntersection` returns `true` once it finds just one intersection
 - In addition, if a point P lies in a shadow, due to an intersection with a sphere, than there is a chance its neighbouting points also lie in a shadow
 - The pointer on line **16** - `shadowSphere` points to `Sphere` object which is the Sphere that has recently caused a shadow
+
+### Bounding Volume heirachy
+- Another way to speed up a ray tracer is via Bounding Volume Heirachies
+- A bounding volume heirachy is a spatial data structure used to store 3D objects in a scene.
+- A spatial data structure is a data structure that attempts to store objects based on their position in a 3D scene
+- The spatial data structure used to implement the bounding volume heirachy is a binary tree.
+- When it comes to bounding volume heirachies: There are two parts, **setting up the bounding volume heirachy** and **traversing the bounding volume heirachy**
+
+#### setting up the bounding volume heirachy
+- the files that set up this data structure is located in: `scene\BoundingTree.h` and `scene\BoundingTree.cpp`
+- the data structure is essentially a binary tree and each node in the binary tree is composed of two parts: 
+- a value which I will call the `rootNode` which represents the bounding box that is used to encapsulate the child bounding boxes or actual spheres of the child trees
+- and two smart pointers - `leftTree` and `rightTree` that point to the left and right child sub trees.
+- the value of a given node called `rootNode` is of type `BoundingBox`. A Bounding Box is defined by three characterisitics: the minimum and maximum co-ordinates of its vertices and a pointer two a sphere object
+- the minimum and maximum coordinates are enough to reconstruct the boundingBox and the pointer if it takes a value of null, signifies that the `rootNode` value is a left node and if not, has two child trees left
