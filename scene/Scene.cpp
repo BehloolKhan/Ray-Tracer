@@ -108,6 +108,11 @@ void Scene::setUpLights() {
 void Scene::setUpScene() {
 	setUpSpheres();
 	setUpLights();
+	//need to set up the bounding boxes now:
+	//
+	spheresCollection.setTheMaxDimension();
+	spheresCollection.sort();
+	spheresCollection.setBoundingTree(spheresCollection.spheres, spheresCollection.boundingTree, 0, spheresCollection.spheres.size());
 }
 
 std::vector<Sphere>& Scene::getSpheres() {
