@@ -71,3 +71,14 @@ This section explains what happens when you rotate the camera:
 - the value of a given node called `rootNode` is of type `BoundingBox`. A Bounding Box is defined by three characterisitics: the minimum and maximum co-ordinates of its vertices and a pointer two a sphere object
 - the minimum and maximum coordinates are enough to reconstruct the boundingBox and the pointer if it takes a value of null, signifies that the `rootNode` value is a left node and if not, has two child trees left and right
 
+##### `ListSpheres` data structure:
+- This data structure is useful for setting up an instance of the BVH data structure and the header and cpp file are located in the scene folder
+- Now this data structre is composed of important members necessary to establishing the BVH data structure
+- First it contains the spheres which is a vector composed of all the spheres in the scene to render. 
+- Second of all, it contains a character which stores the dimensions along which the spheres are most spread out
+- Third of all, it contains the important methods needed to establihs the BVH.
+
+1. In order, to first establish the BVH, we need to stort the data based on the dimension it is most spread out in: the `char max_dimension`
+2. To do this, we need to calculate the dimension in which the spheres are the most spread out in and this is done by the method: `void ListSpheres::setTheMaxDimension()`
+3. Next, we need to sort the data based on this dimension, for example if the max_dimension was x, then the spheres would be sorted in ascending order based on the x part of their center coordinates: `void ListSpheres::sort()`
+4. Finally, we use a divide and conquer technique - where I would take the sorted vector array of spheres and repeateldy divide the list - calculate the bounding box for the given spheres and repeat this process whilst setting up the bounding tree: `void ListSpheres::setBoundingTree(std::span<Sphere>data, BoundingTree& currentBoundingTree, int start_index, int count)`
