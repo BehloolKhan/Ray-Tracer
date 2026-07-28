@@ -11,3 +11,11 @@ void BoundingBox::set_min_max(Vec3 min_, Vec3 max_) {
 	this->min = min_;
 	this->max = max_;
 }
+
+Vec3& BoundingBox::getMax(){
+	return max;
+}
+
+Vec3& BoundingBox::getMin(){
+	return min;
+}

@@ -17,4 +17,9 @@ public:
 		childSphere = nullptr;
 	}
 	void set_min_max(Vec3 min_, Vec3 max_);
+
+	Vec3& getMin() ;
+
+	Vec3& getMax();
+
 };
