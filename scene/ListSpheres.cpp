@@ -147,3 +147,87 @@ void ListSpheres::setBoundingTree(std::span<Sphere>data, BoundingTree& currentBo
 	setBoundingTree(data.subspan(start_index+left_size, right_size), *(currentBoundingTree.getRightChild()), 0, right_size);
 	
 };
+
+bool ListSpheres::rayIntersectAABB(const Vec3& P, const Vec3& D, BoundingBox& AABB) {
+	float t_min_x = calculate_t(AABB.getMin().x, P.x, D.x);
+	float t_max_x = calculate_t(AABB.getMax().x, P.x, D.x);
+
+	float t_min_y = calculate_t(AABB.getMin().y, P.y, D.y);
+	float t_max_y = calculate_t(AABB.getMax().y, P.y, D.y);
+
+	float t_min_z = calculate_t(AABB.getMin().z, P.z, D.z);
+	float t_max_z = calculate_t(AABB.getMax().z, P.z, D.z);
+
+	if (t_min_x > t_max_x) {
+		float t_current = t_min_x;
+		t_min_x = t_max_x;
+		t_max_x = t_current;
+	}
+
+	if (t_min_y > t_max_y) {
+		float t_current = t_min_y;
+		t_min_y = t_max_y;
+		t_max_y = t_current;
+	}
+
+	if (t_min_z > t_max_z) {
+		float t_current = t_min_z;
+		t_min_z = t_max_z;
+		t_max_z = t_current;
+	}
+
+	float t_near = max(t_min_x, t_min_y, t_min_z);
+	float t_far = min(t_max_x, t_max_y, t_max_z);
+
+	if (t_near > t_far) {
+		return false; //not intersected box at all
+	}
+
+	if (t_far < 0) {
+		return false; //box behind 
+	}
+
+	return true;
+};
+
+float ListSpheres::calculate_t(float B_x, float P_x, float D_x) {
+	return (B_x - P_x) / D_x;
+};
+
+float ListSpheres::min(float t1, float t2, float t3) {
+	if (t1 < t2) {
+		if (t1 < t3) {
+			return t1;
+		}
+		else {
+			return t3;
+		}
+	}
+	else {
+		if (t2 < t3) {
+			return t2;
+		}
+		else {
+			return t3;
+		}
+	}
+};
+
+float ListSpheres::max(float t1, float t2, float t3) {
+	if (t1 > t2) {
+		if (t1 > t3) {
+			return t1;
+		}
+		else {
+			return t3;
+		}
+	}
+	else {
+		if (t2 > t3) {
+			return t2;
+		}
+		else {
+			return t3;
+		}
+	}
+};

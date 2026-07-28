@@ -40,6 +40,22 @@ struct ListSpheres {
 	//call the method on left and then right
 	//base case: left or right length is equal to 1:
 	void setBoundingTree(std::span<Sphere>data, BoundingTree& currentBoundingTree, int start_index, int count);
+
+	//method returns true if a ray intersect an AABB - Axis Aligned Bounding Box
+	//
+	bool rayIntersectAABB(const Vec3& P, const Vec3& D, BoundingBox& AABB);
+
+	//method lowkey helps in the above method - does a part of it
+	//
+	float calculate_t(float B_x, float P_x, float D_x);
+
+	//calculates the minimum of three values
+	//
+	float min(float t1, float t2, float t3);
+
+	//calculates the maximum of the three values
+	//
+	float max(float t1, float t2, float t3);
 };
 
 #endif LIST_SPHERES_H
