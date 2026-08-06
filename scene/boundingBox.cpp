@@ -1,9 +1,9 @@
 #include "boundingBox.h"
 
-BoundingBox::BoundingBox():childSphere(nullptr) {
+BoundingBox::BoundingBox() : isChildNode(false) {
 }
 
-void BoundingBox::setChildSphere(Sphere* child_sphere) {
+void BoundingBox::setChildSphere(Sphere child_sphere) {
 	this->childSphere = child_sphere;
 }
 
@@ -18,4 +18,16 @@ Vec3& BoundingBox::getMax(){
 
 Vec3& BoundingBox::getMin(){
 	return min;
+}
+
+Sphere& BoundingBox::getChildSphere() {
+	return childSphere;
+}
+
+void BoundingBox::setChild(bool isChild) {
+	isChildNode = isChild;
+}
+
+bool BoundingBox::isChild() {
+	return isChildNode;
 }
