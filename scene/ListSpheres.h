@@ -9,6 +9,7 @@
 #include <limits>
 #include "BoundingTree.h"
 #include <span>
+#include <tuple>
 
 
 struct ListSpheres {
@@ -56,6 +57,13 @@ struct ListSpheres {
 	//calculates the maximum of the three values
 	//
 	float max(float t1, float t2, float t3);
+
+	//method returns the closest sphere to ray if it intersects one and the correspondong t value:
+	//
+	std::tuple<Sphere, float> closestSphere(Vec3& P, Vec3& D, float t_min, float t_max, BoundingTree& currentBoundingTree);
+
+	//
+	BoundingTree& getBoundingTree();
 };
 
 #endif LIST_SPHERES_H

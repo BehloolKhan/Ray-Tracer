@@ -1,6 +1,8 @@
 #include "ListSpheres.h"
 #include <algorithm>
 #include "Sphere.h"
+#include "../core/methods.h"
+
 
 Vec3* ListSpheres::setBoundingBox(std::span<Sphere>data) {
 
@@ -13,30 +15,30 @@ Vec3* ListSpheres::setBoundingBox(std::span<Sphere>data) {
 
 		//setting the min values
 		//
-		if (element.center.x < x_min) {
-			x_min = element.center.x;
+		if (element.center.x - element.radius < x_min) {
+			x_min = element.center.x - element.radius;
 		}
 
-		if (element.center.y < y_min) {
-			y_min = element.center.y;
+		if (element.center.y - element.radius< y_min) {
+			y_min = element.center.y - element.radius;
 		}
 
-		if (element.center.z < z_min) {
-			z_min = element.center.z;
+		if (element.center.z - element.radius < z_min) {
+			z_min = element.center.z - element.radius;
 		}
 
 		//setting the max values
 		//
-		if (element.center.x > x_max) {
-			x_max = element.center.x;
+		if (element.center.x + element.radius> x_max) {
+			x_max = element.center.x + element.radius;
 		}
 
-		if (element.center.y > y_max) {
-			y_max = element.center.y;
+		if (element.center.y + element.radius> y_max) {
+			y_max = element.center.y + element.radius;
 		}
 
-		if (element.center.x > z_max) {
-			z_max = element.center.z;
+		if (element.center.z + element.radius> z_max) {
+			z_max = element.center.z + element.radius;
 		}
 	}
 
@@ -120,17 +122,19 @@ void ListSpheres::sort() {
 }
 
 void ListSpheres::setBoundingTree(std::span<Sphere>data, BoundingTree& currentBoundingTree, int start_index, int count) {
-	//terminate if count is equal to one
-	//
-	if (count == 1) {
-		currentBoundingTree.getRootNode().setChildSphere(&data[start_index]);
-		return; //exit the function
-	}
 
 	//calculate the max and min co-ordinates for spheres in data
 	//set the root node of current bounding Tree
 	Vec3* coordinates = setBoundingBox(data);
 	currentBoundingTree.setRootNode(coordinates[0], coordinates[1]);
+
+	//terminate if count is equal to one
+	//
+	if (count == 1) {
+		currentBoundingTree.getRootNode().setChildSphere(data[start_index]);
+		currentBoundingTree.getRootNode().setChild(true);
+		return; //exit the function
+	}
 
 	//split vector into two parts
 	//
@@ -149,45 +153,61 @@ void ListSpheres::setBoundingTree(std::span<Sphere>data, BoundingTree& currentBo
 };
 
 bool ListSpheres::rayIntersectAABB(const Vec3& P, const Vec3& D, BoundingBox& AABB) {
-	float t_min_x = calculate_t(AABB.getMin().x, P.x, D.x);
-	float t_max_x = calculate_t(AABB.getMax().x, P.x, D.x);
+	float t_min = -std::numeric_limits<float>::infinity();
+	float t_max = std::numeric_limits<float>::infinity();
 
-	float t_min_y = calculate_t(AABB.getMin().y, P.y, D.y);
-	float t_max_y = calculate_t(AABB.getMax().y, P.y, D.y);
+	// Check X axis
+	if (std::abs(D.x) < 1e-6f) { // Ray is parallel to slab
+		if (P.x < AABB.getMin().x || P.x > AABB.getMax().x) return false;
+	}
+	else {
+		float invD = 1.0f / D.x;
+		float t1 = (AABB.getMin().x - P.x) * invD;
+		float t2 = (AABB.getMax().x - P.x) * invD;
 
-	float t_min_z = calculate_t(AABB.getMin().z, P.z, D.z);
-	float t_max_z = calculate_t(AABB.getMax().z, P.z, D.z);
+		if (t1 > t2) std::swap(t1, t2);
 
-	if (t_min_x > t_max_x) {
-		float t_current = t_min_x;
-		t_min_x = t_max_x;
-		t_max_x = t_current;
+		t_min = std::max(t_min, t1);
+		t_max = std::min(t_max, t2);
+
+		if (t_min > t_max) return false;
 	}
 
-	if (t_min_y > t_max_y) {
-		float t_current = t_min_y;
-		t_min_y = t_max_y;
-		t_max_y = t_current;
+	// Check Y axis
+	if (std::abs(D.y) < 1e-6f) {
+		if (P.y < AABB.getMin().y || P.y > AABB.getMax().y) return false;
+	}
+	else {
+		float invD = 1.0f / D.y;
+		float t1 = (AABB.getMin().y - P.y) * invD;
+		float t2 = (AABB.getMax().y - P.y) * invD;
+
+		if (t1 > t2) std::swap(t1, t2);
+
+		t_min = std::max(t_min, t1);
+		t_max = std::min(t_max, t2);
+
+		if (t_min > t_max) return false;
 	}
 
-	if (t_min_z > t_max_z) {
-		float t_current = t_min_z;
-		t_min_z = t_max_z;
-		t_max_z = t_current;
+	// Check Z axis
+	if (std::abs(D.z) < 1e-6f) {
+		if (P.z < AABB.getMin().z || P.z > AABB.getMax().z) return false;
+	}
+	else {
+		float invD = 1.0f / D.z;
+		float t1 = (AABB.getMin().z - P.z) * invD;
+		float t2 = (AABB.getMax().z - P.z) * invD;
+
+		if (t1 > t2) std::swap(t1, t2);
+
+		t_min = std::max(t_min, t1);
+		t_max = std::min(t_max, t2);
+
+		if (t_min > t_max) return false;
 	}
 
-	float t_near = max(t_min_x, t_min_y, t_min_z);
-	float t_far = min(t_max_x, t_max_y, t_max_z);
-
-	if (t_near > t_far) {
-		return false; //not intersected box at all
-	}
-
-	if (t_far < 0) {
-		return false; //box behind 
-	}
-
-	return true;
+	return t_max >= 0.0f; // Ensure box is not behind the ray origin
 };
 
 float ListSpheres::calculate_t(float B_x, float P_x, float D_x) {
@@ -231,3 +251,62 @@ float ListSpheres::max(float t1, float t2, float t3) {
 		}
 	}
 };
+
+std::tuple<Sphere, float> ListSpheres::closestSphere(Vec3& P, Vec3& D, float t_min, float t_max, BoundingTree& currentBoundingTree) {
+	//intersect box in BoundingTree
+	// If empty node or the ray misses this node's bounding box completely, return no hit
+	//
+	if (!rayIntersectAABB(P, D, currentBoundingTree.getRootNode())) {
+		return { Sphere(), t_max};
+	}
+
+	// Leaf node check: childSphere pointer is valid (not nullptr) - checking to see if the root node of the currentBoundingTree is not a root node
+	//
+	Sphere sphere = currentBoundingTree.getRootNode().getChildSphere();
+	bool isChild = currentBoundingTree.getRootNode().isChild();
+
+	if (isChild) {
+		// Test intersection with actual geometry inside the leaf
+		float closest_t = t_max;
+		std::tuple<float, float>results = IntersectRaySphere(P, D, sphere);
+
+		float t1 = std::get<0>(results);
+		float t2 = std::get<1>(results);
+
+		if (((t1 >= t_min) && (t1 < t_max)) && t1 < closest_t) {
+			closest_t = t1;
+
+		}
+
+		if (((t2 >= t_min) && (t2 < t_max)) && t2 < closest_t) {
+			closest_t = t2;
+
+		}
+		return {sphere, closest_t};
+	}
+
+	// Internal node: Recurse into both left and right children
+	Sphere closest_sphere{};
+	float current_closest_t = t_max;
+
+	// Check left subtree
+	auto [left_sphere, left_t] = closestSphere(P, D, t_min, current_closest_t, (*currentBoundingTree.getLeftChild()));
+	if (left_t < current_closest_t) {
+		closest_sphere = left_sphere;
+		current_closest_t = left_t; // Tighten t_max so right child can prune further
+	}
+
+	// Check right subtree with updated (possibly smaller) max distance
+	auto [right_sphere, right_t] = closestSphere(P, D, t_min, current_closest_t, (*currentBoundingTree.getRightChild()));
+	if (right_t < current_closest_t) {
+		closest_sphere = right_sphere;
+		current_closest_t = right_t;
+	}
+
+	return { closest_sphere, current_closest_t };
+	
+}
+
+BoundingTree& ListSpheres::getBoundingTree() {
+	return boundingTree;
+}
