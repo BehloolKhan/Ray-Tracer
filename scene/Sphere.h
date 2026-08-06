@@ -11,5 +11,6 @@ struct Sphere {
 	int specular;
 	float reflective; //shows how reflective surface is, 0.0 - not, 1.0-very;
 	Sphere(Vec3 center_, float radius_, std::tuple<int, int, int> color_, int specular_, float reflective_);
+	Sphere(); //defualut constructor
 };
 #endif
