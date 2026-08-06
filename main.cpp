@@ -22,7 +22,11 @@ void partOfCanvas(int start_X, int end_X, Scene& scene, Canvas& canvas) {
 			Vec3 D = rotationMatrix * V;
 			float posInf = std::numeric_limits<float>::infinity();
 			std::tuple<int, int, int> color = TraceRay(origin, D, 1.0, posInf, scene, 3, shadowSphere);
+			std::cout << "Trace ray ended\n";
+
+			std::cout << "put pixel color start\n";
 			canvas.putPixel(x, y, color);
+			std::cout << "put pixel color ended\n";
 		}
 	}
 
@@ -56,7 +60,7 @@ int main() {
 	auto start = std::chrono::high_resolution_clock::now();
 
 	//creating threads
-	for (int i = 1; i <= num_threads; ++i) {
+	for (unsigned int i = 1; i <= num_threads; ++i) {
 		vectorThreads.push_back( std::thread(partOfCanvas, start_X, start_X+chunk, std::ref(scene), std::ref(canvas)) );
 		start_X += chunk;
 	}

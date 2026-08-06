@@ -37,7 +37,7 @@ std::tuple<int, int, int> addTwoColors(std::tuple<int, int, int>& color, std::tu
 
 //method that extracts the closesest intersection of the TraceRay part method so it can be reused;
 //
-std::tuple<Sphere*, float>closestIntersection(Vec3& O, Vec3& direction_, float t_min, float t_max, Scene& scene);
+std::tuple<Sphere, float>closestIntersection(Vec3& O, Vec3& direction_, float t_min, float t_max, Scene& scene);
 
 //method that tests to see if the ray intersects with the bounding sphere
 //

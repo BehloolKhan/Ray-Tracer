@@ -1,6 +1,10 @@
 // This header file will be used to store the structure of a tree
 // a Tree consists of a root node associated with a value and a left and right subtree
 //
+
+#ifndef BOUNDING_TREE_H
+#define BOUNDING_TREE_H
+
 #include <memory>
 #include "boundingBox.h"
 
@@ -27,3 +31,5 @@ public:
 	//
 	BoundingBox& getRootNode();
 };
+
+#endif

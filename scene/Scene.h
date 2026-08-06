@@ -63,6 +63,7 @@ public:
 	//
 	Vec3& getBoundingSphereCentre();
 
+	ListSpheres& getSpheresCollection(); //method returns a refrence to the spheresCollection data structure
 
 };
 #endif

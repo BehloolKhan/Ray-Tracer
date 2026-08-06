@@ -215,3 +215,7 @@ float Scene::getBoundingSphereRadius() {
 Vec3& Scene::getBoundingSphereCentre() {
 	return center_public_sphere;
 }
+
+ListSpheres& Scene::getSpheresCollection() {
+	return spheresCollection;
+}
