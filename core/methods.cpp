@@ -60,7 +60,7 @@ bool intersectsBoundingSphere(Vec3& O, Vec3& direction_, float t_min, float t_ma
 
 std::tuple<Sphere, float>closestIntersection(Vec3& O, Vec3& direction_, float t_min, float t_max, Scene& scene) {
 
-	std::cout << "closes Intersection - started \n";
+	
 
 	/*for (Sphere& currentSphere : scene.getSpheres()) {
 
@@ -117,29 +117,31 @@ bool isIntersection(Vec3& P, Vec3& direction_, float t_min, float t_max, Scene& 
 
 
 		if ((t1 >= t_min) && (t1 < t_max)) {
-			shadowSphere = &currentSphere; //This isnt necessarilty the closest sphere that the ray interesects with, but just one of it
+			shadowSphere = &currentSphere; // This is closest sphere beacuse it is always updated
 			return true;
 
 		}
 
 		if ((t2 >= t_min) && (t2 < t_max)) {
-			shadowSphere = &currentSphere; //This isnt necessarilty the closest sphere that the ray interesects with, but just one of it
+			shadowSphere = &currentSphere; // This is closest sphere because it is always updated
 			return true;
 		}
 
 
 	}
 
+	//shadow sphere only gets overrun, if u find tanother sphere it collides with, otherwise, its stuck with the same value
+
 	return false;
 }
 
 std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, Scene& scene, int recursionDepth, Sphere* shadowSphere) {
 
-	std::cout << "\nTrace ray iteration - \n ";
+	
 
 	std::tuple<Sphere, float> results = closestIntersection(O, D, t_min, t_max, scene);
 
-	std::cout << "closes Intersection - ended\n";
+	
 
 	if (std::get<0>(results).radius == 0.0) {
 		return BACKGROUND_COLOUR;
