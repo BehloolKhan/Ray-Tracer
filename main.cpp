@@ -22,11 +22,8 @@ void partOfCanvas(int start_X, int end_X, Scene& scene, Canvas& canvas) {
 			Vec3 D = rotationMatrix * V;
 			float posInf = std::numeric_limits<float>::infinity();
 			std::tuple<int, int, int> color = TraceRay(origin, D, 1.0, posInf, scene, 3, shadowSphere);
-			std::cout << "Trace ray ended\n";
-
-			std::cout << "put pixel color start\n";
+			
 			canvas.putPixel(x, y, color);
-			std::cout << "put pixel color ended\n";
 		}
 	}
 
@@ -37,7 +34,6 @@ void partOfCanvas(int start_X, int end_X, Scene& scene, Canvas& canvas) {
 }
 
 int main() {
-	std::cout << "Hello World" << '\n';
 
 	//setting up the scene
 	//
