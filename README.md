@@ -93,3 +93,24 @@ Next we need to seach for the bounding box and hence the correct sphere and the 
 5. This method also accounts for rays that originate inside a bounding box and work the same way.
 6. If anywhere in the process, once a ray intersects a box and then longer intersects any more boxes within that box, we can say the ray hasnt intersected any spheres thankfully.
 7. Also the t returned when a ray actaully hits a sphere, isnt the t that is derived when the ray hits the box, its the actual one derived when the ray hits the sphere
+
+### Note on performance:
+
+#### raw statistics
+- Although the BVH is intended to speed up performance, it has unfortunaltely reduced it so far.
+- With no optimisations, this ray tracer took about 5 minutes - 300 seconds, after parallelisation was introduced, the speed of the ray tracer took about 161 seconds
+- Then the concept of shadow optimisation was introduced, and that reduced time to 110 seconds by 51 seconds so far.
+- Then I introduced the concept of a bounding sphere, - One bounding sphere and that reduced the time to 60 seconds.
+- After introducing BVH, the time had actually increased to 121 seconds - and removed bounding sphere whilst keeping the other optimisations
+
+#### plausible explanation as to why:
+**NOTE:**
+- I never experimented with these optimisations in isolation as when I was dealing with shadow optimisations, it was while executing threads parallely
+
+- parallelisations worked since having more threads execute specific regions of the canvas and writing their own individual values to array could be done simultaneously
+- shadow optimisation works since, when u have a ray that hits a sphere, the adjacent cells will probably hit it - this is maninly for recursion where the origin isnt the actual (0,0,0) - but rather than another point and what it does
+- is that it skips the whole calculating the intensities we dont need
+- Then came then the bounding sphere, which encompassed alot of the current spheres. The reason why this worked is because - most of the ray didnt intersect any of the spheres,
+- which means u only had to check if the ray interesectd the bounding sphere and since it didnt, u didnt need to check with the other spheres, which means u only did one comparions instead of 4 which is the number of spheres.
+- After, we had BVH and I decided to replace bounding sphere method with this. The reasony why this slowed down the ray tracer is with the bounding sphere, I would do 2-5 comparisons and with this new method, I would do 3-7 comparions to get the correct sphere and given that reflections were being taken into account aswell, I had to repeat the process again making it worser
+- Also, the largest spread = Y-axis, and blue and green have the largest y values, therefore on average u have to calculate 7 interactions, even if the ray interescts a point through bounding box that contains the blue and green sphere, even thoguht it might not hit those two spheres, u would still have to check, so 6-7 checks or 4-5 checks.
