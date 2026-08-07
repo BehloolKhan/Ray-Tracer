@@ -68,7 +68,7 @@ This section explains what happens when you rotate the camera:
 - the data structure is essentially a binary tree and each node in the binary tree is composed of two parts: 
 - a value which I will call the `rootNode` which represents the bounding box that is used to encapsulate the child bounding boxes or actual spheres of the child trees
 - and two smart pointers - `leftTree` and `rightTree` that point to the left and right child sub trees.
-- the value of a given node called `rootNode` is of type `BoundingBox`. A Bounding Box is defined by three characterisitics: the minimum and maximum co-ordinates of its vertices and a pointer two a sphere object
+- the value of a given node called `rootNode` is of type `BoundingBox`. A Bounding Box is defined by three characterisitics: the minimum and maximum co-ordinates of its vertices and a sphere object it holds, as well as a boolean value indicating weather its a child node
 - the minimum and maximum coordinates are enough to reconstruct the boundingBox and the pointer if it takes a value of null, signifies that the `rootNode` value is a left node and if not, has two child trees left and right
 
 ##### `ListSpheres` data structure:
@@ -82,3 +82,14 @@ This section explains what happens when you rotate the camera:
 2. To do this, we need to calculate the dimension in which the spheres are the most spread out in and this is done by the method: `void ListSpheres::setTheMaxDimension()`
 3. Next, we need to sort the data based on this dimension, for example if the max_dimension was x, then the spheres would be sorted in ascending order based on the x part of their center coordinates: `void ListSpheres::sort()`
 4. Finally, we use a divide and conquer technique - where I would take the sorted vector array of spheres and repeateldy divide the list - calculate the bounding box for the given spheres and repeat this process whilst setting up the bounding tree: `void ListSpheres::setBoundingTree(std::span<Sphere>data, BoundingTree& currentBoundingTree, int start_index, int count)`
+5. This would terminate when the number of spheres left was One, in which the root node bounding box would have its isChild attrubute set to true and the bounding trees left and right pointers would be null
+
+**Searching for the intersection**
+Next we need to seach for the bounding box and hence the correct sphere and the corresponding t value for a given ray which is defined by its starting value - P and direction vector D
+1. The ray is shooted into the scene, and the program checks weather or not it intersects with the bounding box that encomposses all the current spheres,
+2. if it doesnt, the background color of BLACK is returned. 
+3. If it does, a recursive search algorithm - pre order traversal is used and it terminates when u get to a bounding box that is a child node, has no more sucessors and therefore can no longer terimnate and that bounding box actually contains the sphere and no more other bounding boxes
+4. In the event, that a ray intersects two smaller boxes as the same time, in a given bounding box that it is in, we always take the bounding box that provides the smaller t value because atm in time, the ray would be the same for both bounding boxes and so would the origin of the ray - so taking the smaller value of t means taking the bounding box that is closer to origin
+5. This method also accounts for rays that originate inside a bounding box and work the same way.
+6. If anywhere in the process, once a ray intersects a box and then longer intersects any more boxes within that box, we can say the ray hasnt intersected any spheres thankfully.
+7. Also the t returned when a ray actaully hits a sphere, isnt the t that is derived when the ray hits the box, its the actual one derived when the ray hits the sphere
