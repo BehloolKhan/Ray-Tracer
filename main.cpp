@@ -1,12 +1,12 @@
 #include <iostream>
-#include "core/Constants.h"
-#include "core/methods.h"
-#include "scene/Sphere.h"
-#include "core/Vec3.h"
+#include "include/core/Constants.h"
+#include "include/core/methods.h"
+#include "include/geometry/Sphere.h"
+#include "include/core/Vec3.h"
 #include <tuple>
 #include <limits>
 #include <vector>
-#include "core/Canvas.h"
+#include "include/core/Canvas.h"
 #include "include/scene/Scene.h"
 #include <thread>
 #include <chrono>

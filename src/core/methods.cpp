@@ -1,16 +1,16 @@
 //This will include the function/procedure definitons for all the functions/procedures used in the book
 //
-#include "Constants.h"
-#include "Vec3.h"
+#include "../../include/core/Constants.h"
+#include "../../include/core/Vec3.h"
 #include <tuple>
-#include "../scene/Sphere.h"
+#include "../../include/geometry/Sphere.h"
 #include <limits>
 #include <cmath>
 #include <vector>
 #include <iostream>
-#include "../scene/Scene.h"
+#include "../../include/scene/Scene.h"
 #include "methods.h"
-#include "../testFile.h"
+#include "../../testFile.h"
 
 //method that returns the corresponding co-ordinate on the view port for a
 //given point on the canvas

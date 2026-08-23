@@ -1,4 +1,4 @@
-#include "BoundingTree.h"
+#include "../../include/acceleration/BoundingTree.h"
 
 void BoundingTree::setLeftChild(BoundingTree* leftTree_) {
 	leftTree = std::unique_ptr<BoundingTree>(leftTree_);

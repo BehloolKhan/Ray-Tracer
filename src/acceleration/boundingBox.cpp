@@ -1,4 +1,4 @@
-#include "boundingBox.h"
+#include "../../include/acceleration/boundingBox.h"
 
 BoundingBox::BoundingBox() : isChildNode(false) {
 }

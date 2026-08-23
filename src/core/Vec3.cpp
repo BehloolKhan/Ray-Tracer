@@ -1,6 +1,6 @@
 //This file will store the method defintions of the class Vec3
 //
-#include "Vec3.h"
+#include "../../include/core/Vec3.h"
 #include <iostream>
 #include <cmath>
 

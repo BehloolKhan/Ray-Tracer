@@ -1,7 +1,7 @@
-#include "Canvas.h"
+#include "../../include/core/Canvas.h"
 #include <fstream>
 #include <tuple>
-#include "Constants.h"
+#include "../../include/core/Constants.h"
 
 Canvas::Canvas() {
 
