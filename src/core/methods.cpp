@@ -1,16 +1,16 @@
 //This will include the function/procedure definitons for all the functions/procedures used in the book
 //
-#include "Constants.h"
-#include "Vec3.h"
+#include "../../include/core/Constants.h"
+#include "../../include/core/Vec3.h"
 #include <tuple>
-#include "../scene/Sphere.h"
+#include "../../include/geometry/Sphere.h"
 #include <limits>
 #include <cmath>
 #include <vector>
 #include <iostream>
-#include "../scene/Scene.h"
+#include "../../include/scene/Scene.h"
 #include "methods.h"
-#include "../testFile.h"
+#include "../../testFile.h"
 
 //method that returns the corresponding co-ordinate on the view port for a
 //given point on the canvas
@@ -43,11 +43,26 @@ std::tuple<float, float> IntersectRaySphere(Vec3& O, Vec3& D, Sphere sphere) {
 
 }
 
-std::tuple<Sphere*, float>closestIntersection(Vec3& O, Vec3& direction_, float t_min, float t_max, Scene& scene) {
-	float closest_t = std::numeric_limits<float>::infinity();
-	Sphere* closest_sphere = nullptr;
+bool intersectsBoundingSphere(Vec3& O, Vec3& direction_, float t_min, float t_max, Scene& scene) {
 
-	for (Sphere& currentSphere : scene.getSpheres()) {
+	std::tuple<float, float> t_values = IntersectRaySphere(O, direction_, Sphere(scene.getBoundingSphereCentre(), scene.getBoundingSphereRadius(), {0, 0, 0}, 0, 0.0)); //passing in dumby values for color, specular and reflective values because it doesnt matter
+	if (std::get<0>(t_values) <= t_max && std::get<0>(t_values) >= t_min) {
+		return true;
+	}
+
+	if (std::get<1>(t_values) <= t_max && std::get<1>(t_values) >= t_min) {
+		return true;
+	}
+
+	return false; //no intersection
+
+}
+
+std::tuple<Sphere, float>closestIntersection(Vec3& O, Vec3& direction_, float t_min, float t_max, Scene& scene) {
+
+	
+
+	/*for (Sphere& currentSphere : scene.getSpheres()) {
 
 		std::tuple<float, float> t_values = IntersectRaySphere(O, direction_, currentSphere);
 		float t1 = std::get<0>(t_values);
@@ -68,35 +83,87 @@ std::tuple<Sphere*, float>closestIntersection(Vec3& O, Vec3& direction_, float t
 
 	}
 
-	return {closest_sphere, closest_t};
+	return {closest_sphere, closest_t};*/
+
+	return scene.getSpheresCollection().closestSphere(O, direction_, t_min, t_max, scene.getSpheresCollection().boundingTree);
+
 }
 
-std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, Scene& scene, int recursionDepth) {
+bool isIntersection(Vec3& P, Vec3& direction_, float t_min, float t_max, Scene& scene, Sphere* shadowSphere) {
 
-	std::tuple<Sphere*, float> results = closestIntersection(O, D, t_min, t_max, scene);
+	//checking to see if it intersects with sphere already intersected from similiar P point
+	//
+	if (shadowSphere != nullptr) {
+		std::tuple<float, float> t_values = IntersectRaySphere(P, direction_, *shadowSphere);
+		float t1 = std::get<0>(t_values);
+		float t2 = std::get<1>(t_values);
 
-	if (std::get<0>(results) == nullptr) {
+
+		if ((t1 >= t_min) && (t1 < t_max)) {
+			return true;
+
+		}
+
+		if ((t2 >= t_min) && (t2 < t_max)) {
+			return true;
+		}
+	}
+
+	for (Sphere& currentSphere : scene.getSpheres()) {
+
+		std::tuple<float, float> t_values = IntersectRaySphere(P, direction_, currentSphere);
+		float t1 = std::get<0>(t_values);
+		float t2 = std::get<1>(t_values);
+
+
+		if ((t1 >= t_min) && (t1 < t_max)) {
+			shadowSphere = &currentSphere; // This is closest sphere beacuse it is always updated
+			return true;
+
+		}
+
+		if ((t2 >= t_min) && (t2 < t_max)) {
+			shadowSphere = &currentSphere; // This is closest sphere because it is always updated
+			return true;
+		}
+
+
+	}
+
+	//shadow sphere only gets overrun, if u find tanother sphere it collides with, otherwise, its stuck with the same value
+
+	return false;
+}
+
+std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, Scene& scene, int recursionDepth, Sphere* shadowSphere) {
+
+	
+
+	std::tuple<Sphere, float> results = closestIntersection(O, D, t_min, t_max, scene);
+
+	
+
+	if (std::get<0>(results).radius == 0.0) {
 		return BACKGROUND_COLOUR;
 	}
 
 	//Now lets compute the intensity at the point of intersection
 	//
 	Vec3 P = O + Vec3::multiplier(D, std::get<1>(results));
-	Vec3 N = P - std::get<0>(results)->center;
+	Vec3 N = P - std::get<0>(results).center;
 	Vec3 N_normal = Vec3::divides(N, N.length());
 
-
-	float intensity = computeLighting(O, P, N_normal, scene, std::get<0>(results)->specular);
-	std::tuple<int, int, int> localColor = std::get<0>(results)->color;
+	float intensity = computeLighting(O, P, N_normal, scene, std::get<0>(results).specular, shadowSphere);
+	std::tuple<int, int, int> localColor = std::get<0>(results).color;
 	multiplyColorVector(localColor, intensity);
 
-	float r = std::get<0>(results)->reflective;
+	float r = std::get<0>(results).reflective;
 	if((recursionDepth <= 0 ) || (r<=0.0)) {
 		return localColor;
 	}
 
 	Vec3 R = reflectRay(-D, N_normal);
-	std::tuple<int, int, int> reflectedColor = TraceRay(P, R, (float)0.001, std::numeric_limits<float>::infinity(), scene, recursionDepth-1);
+	std::tuple<int, int, int> reflectedColor = TraceRay(P, R, (float)0.001, std::numeric_limits<float>::infinity(), scene, recursionDepth-1, shadowSphere);
 
 	multiplyColorVector(localColor, (float)1.0-r);
 	multiplyColorVector(reflectedColor, r);
@@ -104,7 +171,7 @@ std::tuple<int, int, int> TraceRay(Vec3& O, Vec3& D, float t_min, float t_max, S
 	return addTwoColors(localColor, reflectedColor);
 }
 
-float computeLighting(Vec3& O, Vec3& P, Vec3& N, Scene& scene, int specular_) {
+float computeLighting(Vec3& O, Vec3& P, Vec3& N, Scene& scene, int specular_, Sphere* shadowSphere) {
 	float i = 0.0;
 	P.printAll();
 	N.printAll();
@@ -129,9 +196,9 @@ float computeLighting(Vec3& O, Vec3& P, Vec3& N, Scene& scene, int specular_) {
 
 			//checking to see if there is a shadow
 			//
-			std::tuple<Sphere*, float> results = closestIntersection(P, L, (float)0.001, t_max, scene);
+			bool intersects = isIntersection(P, L, (float)0.001, t_max, scene, shadowSphere);
 
-			if (std::get<0>(results) == nullptr) { //no intersection between point P and source of light
+			if (!intersects) { //no intersection between point P and source of light
 				//diffuse Reflection
 				//
 				float n_dot_L = Vec3::dot(N, L);
@@ -176,7 +243,7 @@ void multiplyColorVector(std::tuple<int, int, int>& color, float factor) {
 	std::get<2>(color) = (int)(std::get<2>(color) * factor);
 }
 
-Vec3 reflectRay(Vec3& R, Vec3& N) {
+Vec3 reflectRay(const Vec3& R, const Vec3& N) {
 	float a = 2*Vec3::dot(R, N);
 	Vec3 vector = Vec3::multiplier(N, a) - R;
 	return vector;
@@ -188,4 +255,19 @@ std::tuple<int, int, int> addTwoColors(std::tuple<int, int, int>& color, std::tu
 	int value3 = std::get<2>(color) + std::get<2>(colorOne);
 
 	return { value1, value2, value3 };
+}
+
+Vec3 operator*(float(&rotation)[3][3], const Vec3& dir) {
+	float outputResult[3];
+	float vec3array[3] = {dir.x, dir.y, dir.z};
+
+	for (int i = 0; i < 3; ++i) {
+		float total = 0;
+		for (int j = 0; j < 3; ++j) {
+			total += (vec3array[j]*rotation[i][j]);
+		}
+		outputResult[i] = total;
+	}
+
+	return Vec3(outputResult[0], outputResult[1], outputResult[2]);
 }

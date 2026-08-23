@@ -15,4 +15,9 @@ inline constexpr float VIEWPORT_WIDTH = 1;
 inline constexpr int PROJECTTION_PLANE_D = 1;
 inline Vec3 origin = Vec3(0, 0, 0);
 inline std::tuple<int, int, int> BACKGROUND_COLOUR(0, 0, 0);
+
+inline float rotationMatrix[3][3] = {
+	{1.0, 0.0, 0.0},
+	{0.0, 1.0, 0.0},
+	{0.0, 0.0, 1.0}};
 #endif
