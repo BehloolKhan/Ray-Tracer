@@ -7,7 +7,7 @@
 #include <limits>
 #include <vector>
 #include "core/Canvas.h"
-#include "scene/Scene.h"
+#include "include/scene/Scene.h"
 #include <thread>
 #include <chrono>
 
