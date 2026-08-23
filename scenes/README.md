@@ -1,0 +1,1 @@
+This will contain the files with .scene extensions used to define the scene so u can easily edit the file instead of redifining everything
